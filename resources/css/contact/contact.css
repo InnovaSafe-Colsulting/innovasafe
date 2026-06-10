@@ -1,0 +1,17 @@
+.hero-contact {
+    background-color: #01020e;
+}
+
+.contact-title {
+    font-size: 28px;
+    color: #39bf24;
+}
+
+.contact-heading {
+    font-size: clamp(2rem, 5vw, 56px);
+}
+
+.contact-subtitle {
+    font-size: 18px;
+    max-width: 580px;
+}

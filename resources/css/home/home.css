@@ -1,0 +1,15 @@
+.hero-home {
+    background-color: #01020e;
+}
+
+.hero-home__bg-gradient {
+    background: linear-gradient(to bottom right, #01020e, #020818, #01020e);
+}
+
+.hero-home__bg-glow {
+    background: radial-gradient(ellipse at 70% 50%, rgba(59, 130, 246, 0.08), transparent 60%);
+}
+
+.hero-home__bg-glow-bottom {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.05), transparent 70%);
+}

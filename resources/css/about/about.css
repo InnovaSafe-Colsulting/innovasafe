@@ -1,0 +1,16 @@
+.hero-about {
+    background-color: #01020e;
+}
+
+.about-title {
+    font-size: 18px;
+    color: #2596be;
+}
+
+.about-heading {
+    font-size: clamp(2rem, 5vw, 56px);
+}
+
+.about-description {
+    font-size: 23px;
+}

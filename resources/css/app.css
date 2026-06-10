@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@import "./layouts/app.css";
+@import "./home/home.css";
+@import "./contact/contact.css";
+@import "./services/services.css";
+@import "./about/about.css";
+@import "./resources/resources.css";
+
+/* Cursor pointer para todos los botones */
+button,
+[type="button"],
+[type="reset"],
+[type="submit"],
+[role="button"] {
+    cursor: pointer;
+}

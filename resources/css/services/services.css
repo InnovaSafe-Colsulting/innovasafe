@@ -1,0 +1,12 @@
+.hero-services {
+    background-color: #01020e;
+}
+
+.services-title {
+    font-size: 23px;
+    color: #2268bd;
+}
+
+.services-heading {
+    font-size: clamp(2rem, 4vw, 40px);
+}

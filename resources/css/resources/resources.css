@@ -1,0 +1,12 @@
+.hero-resources {
+    background-color: #01020e;
+}
+
+.resources-title {
+    font-size: 23px;
+    color: #2596be;
+}
+
+.resources-heading {
+    font-size: clamp(2rem, 5vw, 56px);
+}
