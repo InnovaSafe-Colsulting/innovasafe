@@ -134,7 +134,7 @@
 {{-- Hero banner --}}
 <div class="dash-hero">
     <div class="dash-hero-text">
-        <h1>{{ $greeting }}, {{ $user->names }}! 👋</h1>
+        <h1>{{ $greeting }}, {{ $user ? ($user->names ?? $user->name ?? 'Usuario') : 'Usuario' }}! 👋</h1>
         <p>Bienvenido al Centro de Gestión Empresarial de InnovaSafe.<br>Desde aquí puedes administrar y hacer crecer tu empresa.</p>
         <div class="dash-hero-meta">
             <span>
@@ -209,7 +209,7 @@
     <div class="d-panel">
         <div class="d-panel-hd">
             <span class="d-panel-title">Actividad Reciente</span>
-            <a href="#" class="d-panel-link">Ver todo</a>
+            <a href="/admin/resources-management-page" class="d-panel-link" style="color: #22c55e; font-weight: 600;">📁 Gestionar Recursos</a>
         </div>
         {{-- 🔴 QUEMADO: últimos eventos del sistema --}}
         <div class="act-item">
@@ -322,7 +322,8 @@
                 <div class="cc-delta">+9 este mes</div>{{-- 🔴 QUEMADO --}}
             </div>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem">
+            <button class="d-btn" onclick="window.location.href='/admin/resources-management-page'">Gestionar Recursos</button>
             <button class="d-btn">Gestionar Blog</button>
             <button class="d-btn">Gestionar Guías</button>
             <button class="d-btn">Gestionar Descargables</button>

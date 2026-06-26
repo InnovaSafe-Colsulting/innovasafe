@@ -10,9 +10,9 @@ class AdminDashboard extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-home';
 
-    protected string $view = 'filament.pages.admin-dashboard';
+    protected string $view = 'filament.pages.admin-dashboard-clean';
 
-    protected static ?string $navigationLabel = 'Dashboard';
+    protected static ?string $navigationLabel = 'InnovaSafe';
 
     protected static ?string $title = '';
 
@@ -27,7 +27,16 @@ class AdminDashboard extends Page
 
     public function getViewData(): array
     {
-        $user = Auth::user();
+        $user = auth()->user();
+        
+        // Verificar que el usuario existe antes de procesar
+        if (!$user) {
+            return [
+                'user' => null,
+                'greeting' => 'Buen día',
+                'now' => now(),
+            ];
+        }
 
         $hour = now()->hour;
         $greeting = match (true) {

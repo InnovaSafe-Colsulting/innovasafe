@@ -51,6 +51,12 @@ class User extends Authenticatable
         return $this->names . ' ' . $this->last_names;
     }
 
+    // Método requerido por Filament para mostrar el nombre del usuario
+    public function getFilamentName(): string
+    {
+        return $this->getNameAttribute();
+    }
+
     public function setStatusAttribute($value)
     {
         $this->attributes['status'] = $value == true ? '1' : '0';

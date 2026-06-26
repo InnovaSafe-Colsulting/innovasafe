@@ -10,7 +10,33 @@
             <p class="text-sm text-gray-500 mt-2">Accede a tu plataforma InnovaSafe</p>
         </div>
 
-        <form method="POST" action="{{ route('login') }}" class="space-y-5">
+        {{-- Mensajes de éxito y error --}}
+        @if (session('success'))
+            <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p class="text-green-700 text-sm">{{ session('success') }}</p>
+            </div>
+        @endif
+        
+        @if (session('message'))
+            <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p class="text-blue-700 text-sm">{{ session('message') }}</p>
+            </div>
+        @endif
+        
+        @if (session('error') || $errors->any())
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                @if(session('error'))
+                    <p class="text-red-700 text-sm">{{ session('error') }}</p>
+                @endif
+                @if($errors->any())
+                    @foreach($errors->all() as $error)
+                        <p class="text-red-700 text-sm">{{ $error }}</p>
+                    @endforeach
+                @endif
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('login.post') }}" class="space-y-5">
             @csrf
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>

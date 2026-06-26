@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -41,8 +42,9 @@ Route::get('/recursos/descargables', [DocumentsResourcesDetailController::class,
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout.get');
 
-Route::middleware(['auth', 'check.paid.plans'])->group(function () {
+Route::middleware(['auth', 'client.only'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home.dashboard');
     Route::post('/renovar/servicios', [ContactController::class, 'getUserServices'])->name('renovar.services');
     Route::get('/pagos', [PaymentController::class, 'index'])->name('payments');
@@ -59,7 +61,32 @@ Route::middleware(['auth', 'check.paid.plans'])->group(function () {
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/payment-pdf/{paymentTypeId}', [CheckoutController::class, 'downloadPaymentPdf'])->name('checkout.payment-pdf');
     Route::get('/historial', [OrderController::class, 'index'])->name('orders.index');
-    // Route::get('/perfil', [ProfileController::class, 'index'])->name('profile');
-    // Route::put('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::get('/perfil', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+// Rutas para administradores
+Route::middleware(['auth', 'admin.only'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/gestionar-recursos', [ResourceController::class, 'index'])->name('resources.index');
+    Route::get('/gestionar-recursos/crear', [ResourceController::class, 'create'])->name('resources.create');
+    Route::post('/gestionar-recursos', [ResourceController::class, 'store'])->name('resources.store');
+    Route::get('/gestionar-recursos/{id}/{type}/editar', [ResourceController::class, 'edit'])->name('resources.edit');
+    Route::put('/gestionar-recursos/{id}/{type}', [ResourceController::class, 'update'])->name('resources.update');
+    Route::delete('/gestionar-recursos/{id}/{type}', [ResourceController::class, 'destroy'])->name('resources.destroy');
+});
+
+// Email Verification Routes
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/home')->with('success', 'Email verificado exitosamente.');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (\Illuminate\Http\Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', 'Enlace de verificación enviado.');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');

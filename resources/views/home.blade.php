@@ -37,9 +37,13 @@
                     <a href="#" class="btn-asesoria bg-blue-600 hover:bg-blue-700 text-white px-7 py-3.5 rounded-lg font-semibold transition-all flex items-center gap-2 shadow-lg shadow-blue-600/25">
                         Solicitar Asesoría <span>&rarr;</span>
                     </a>
-                    <button type="button" onclick="openRenovarModal(event)" class="border border-white/20 text-white px-7 py-3.5 rounded-lg font-semibold hover:bg-white/5 hover:border-white/40 transition-all">
-                        ¿Deseas Renovar?
-                    </button>
+                    @auth
+                        @if(Auth::user()->role_id == 3)
+                            <button type="button" onclick="openRenovarModal(event)" class="border border-white/20 text-white px-7 py-3.5 rounded-lg font-semibold hover:bg-white/5 hover:border-white/40 transition-all">
+                                ¿Deseas Renovar?
+                            </button>
+                        @endif
+                    @endauth
                 </div>
             </div>
         </div>
@@ -168,29 +172,35 @@
                 @php
                     // Determinar icono y colores según el servicio
                     $serviceName = strtolower($service->name);
+                    $cursorClass = 'service-sst'; // Default
                     if (strpos($serviceName, 'sst') !== false || strpos($serviceName, 'salud') !== false) {
                         $iconColor = 'text-green-600';
                         $bgColor = 'bg-green-100';
+                        $cursorClass = 'service-sst';
                         $icon = '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>';
                     } elseif (strpos($serviceName, 'calidad') !== false) {
                         $iconColor = 'text-red-600';
                         $bgColor = 'bg-red-100';
+                        $cursorClass = 'service-quality';
                         $icon = '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>';
                     } elseif (strpos($serviceName, 'ambiental') !== false) {
                         $iconColor = 'text-green-600';
                         $bgColor = 'bg-green-100';
+                        $cursorClass = 'service-environmental';
                         $icon = '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
                     } elseif (strpos($serviceName, 'consultor') !== false) {
                         $iconColor = 'text-blue-600';
                         $bgColor = 'bg-blue-100';
+                        $cursorClass = 'service-sst';
                         $icon = '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>';
                     } else {
                         $iconColor = 'text-blue-600';
                         $bgColor = 'bg-blue-100';
+                        $cursorClass = 'service-sst';
                         $icon = '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>';
                     }
                 @endphp
-                <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition {{ $cursorClass }}">
                     <div class="w-12 h-12 {{ $bgColor }} rounded-xl flex items-center justify-center mb-4">
                         {!! $icon !!}
                     </div>

@@ -12,9 +12,6 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Facades\FilamentView;
-use Filament\View\PanelsRenderHook;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -26,27 +23,7 @@ class AdminPanelProvider extends PanelProvider
 {
     public function boot(): void
     {
-        FilamentView::registerRenderHook(
-            PanelsRenderHook::STYLES_AFTER,
-            fn (): string => Blade::render('
-                <style>
-                    /* ── Item activo: background azul sólido ── */
-                    .fi-sidebar-item.fi-active .fi-sidebar-item-btn {
-                        background-color: rgb(37 99 235) !important;
-                        border-radius: .5rem;
-                    }
-                    .fi-sidebar-item.fi-active .fi-sidebar-item-btn .fi-sidebar-item-icon,
-                    .fi-sidebar-item.fi-active .fi-sidebar-item-btn .fi-sidebar-item-label {
-                        color: #fff !important;
-                    }
-                    /* ── Hover items inactivos ── */
-                    .fi-sidebar-item:not(.fi-active) .fi-sidebar-item-btn:hover {
-                        background-color: rgba(37,99,235,.15) !important;
-                        border-radius: .5rem;
-                    }
-                </style>
-            '),
-        );
+        //
     }
 
     public function panel(Panel $panel): Panel
@@ -56,6 +33,19 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->authGuard('web')
+            ->authPasswordBroker('users')
+            ->profile()
+            ->userMenuItems([
+                'profile' => \Filament\Navigation\MenuItem::make()
+                    ->label('Perfil')
+                    ->url(fn (): string => '#')
+                    ->icon('heroicon-o-user-circle'),
+                'logout' => \Filament\Navigation\MenuItem::make()
+                    ->label('Cerrar sesión')
+                    ->url('/logout')
+                    ->icon('heroicon-o-arrow-right-on-rectangle'),
+            ])
             ->darkMode(true)
             ->defaultThemeMode(ThemeMode::Dark)
             ->colors([
@@ -75,12 +65,19 @@ class AdminPanelProvider extends PanelProvider
                 ],
             ])
             ->brandName('InnovaSafe')
-            ->brandLogo(view('filament.components.brand-logo'))
+            ->brandLogo(fn (): string => view('filament.components.brand-logo')->render())
             ->brandLogoHeight('3rem')
             ->favicon(asset('images/home/company-icon.png'))
             ->globalSearch(true)
             ->globalSearchKeyBindings(['ctrl+k', 'cmd+k'])
             ->sidebarCollapsibleOnDesktop()
+            ->userMenuItems([
+                'logout' => \Filament\Navigation\MenuItem::make()
+                    ->label('Cerrar sesión')
+                    ->url('/logout')
+                    ->icon('heroicon-o-arrow-right-on-rectangle'),
+            ])
+
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
@@ -106,7 +103,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                EnsureUserIsAdmin::class,
+                \App\Http\Middleware\AdminOnly::class,
             ]);
     }
 }

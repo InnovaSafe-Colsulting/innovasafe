@@ -17,7 +17,7 @@ class OrderController extends Controller
             return redirect()->route('login');
         }
 
-        $orders = Order::with(['items.plan'])
+        $orders = Order::with(['items.plan', 'paymentType'])
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();

@@ -6,6 +6,8 @@
 @import "./services/services.css";
 @import "./about/about.css";
 @import "./resources/resources.css";
+@import "./cursors.css";
+@import "./whatsapp-float.css";
 
 /* Cursor pointer para todos los botones */
 button,

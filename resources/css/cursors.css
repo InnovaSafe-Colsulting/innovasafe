@@ -1,0 +1,207 @@
+/* ====================================
+   CURSORES TEMÁTICOS INNOVASAFE
+   ==================================== */
+
+/* Cursor base normal - Flecha con toque azul InnovaSafe */
+* {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M1 1l4 13 3-3 8-2L1 1z" fill="%233b82f6" stroke="%23ffffff" stroke-width="0.5"/></svg>') 2 2, auto;
+}
+
+/* Cursor para elementos de redes sociales - PRIMERA PRIORIDAD */
+footer .social-link,
+footer a.social-link,
+footer div.flex.items-center.gap-3 a,
+.whatsapp-float,
+.whatsapp-float > *,
+.whatsapp-btn,
+.whatsapp-btn > *,
+a[class*="social"],
+a[href*="linkedin"],
+a[href*="facebook"],
+a[href*="instagram"],
+a[href*="twitter"],
+a[href*="wa.me"] {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"><path d="M4 10c0-1 1-2 2-2h3c1 0 2-1 2-2V4c0-1 1-2 2-2s2 1 2 2v8l4-1c1 0 2 1 1 2l-2 6c0 1-1 2-2 2H8c-1 0-2-1-2-2l-2-7z" fill="%233b82f6" stroke="%23ffffff" stroke-width="1"/><path d="M11 2l3 2-3 2-3-2z" fill="%2305df72"/><circle cx="11" cy="8" r="1.5" fill="%23ffffff"/></svg>') 11 11, pointer !important;
+}
+
+/* Cursor pensando/esperando - Escudo con spinner */
+.cursor-thinking,
+.loading,
+[data-loading="true"],
+.btn-loading {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="%231d4ed8" stroke="%23ffffff" stroke-width="1.5" opacity="0.8"/><circle cx="10" cy="10" r="4" fill="none" stroke="%23ffffff" stroke-width="2" stroke-dasharray="6.28" stroke-dashoffset="1.57"><animateTransform attributeName="transform" type="rotate" values="0 10 10;360 10 10" dur="1s" repeatCount="indefinite"/></circle><path d="M10 5l2 3-2 3-2-3z" fill="%23ffffff"/></svg>') 10 10, wait;
+}
+
+/* Cursor para botones y enlaces - Mano con escudo InnovaSafe especializada */
+button,
+a,
+.btn,
+.clickable,
+input[type="submit"],
+input[type="button"],
+[role="button"],
+button[type="submit"],
+.tab-btn,
+.billing-radio,
+[type="radio"],
+[type="checkbox"] {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"><path d="M4 10c0-1 1-2 2-2h3c1 0 2-1 2-2V4c0-1 1-2 2-2s2 1 2 2v8l4-1c1 0 2 1 1 2l-2 6c0 1-1 2-2 2H8c-1 0-2-1-2-2l-2-7z" fill="%233b82f6" stroke="%23ffffff" stroke-width="1"/><path d="M11 2l3 2-3 2-3-2z" fill="%2305df72"/><circle cx="11" cy="8" r="1.5" fill="%23ffffff"/></svg>') 11 11, pointer !important;
+}
+
+/* Cursor para formularios - Pluma de seguridad */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+textarea,
+select,
+.form-control {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" viewBox="0 0 16 20"><path d="M2 18l12-12-2-2L2 14v4z" fill="%233b82f6"/><path d="M14 4l2-2-2-2-2 2 2 2z" fill="%2305df72"/><line x1="2" y1="18" x2="6" y2="18" stroke="%23ffffff" stroke-width="1"/></svg>') 2 18, text;
+}
+
+/* Cursor para elementos arrastrables - Mano cerrada con escudo */
+.draggable,
+[draggable="true"] {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="%231d4ed8" opacity="0.8"/><path d="M6 6h6v6H6z" fill="%23ffffff"/><circle cx="9" cy="9" r="2" fill="%2305df72"/></svg>') 9 9, grab;
+}
+
+.dragging {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="%2305df72" opacity="0.9"/><path d="M6 6h6v6H6z" fill="%23ffffff"/><circle cx="9" cy="9" r="2" fill="%231d4ed8"/></svg>') 9 9, grabbing;
+}
+
+/* Cursor para selección de texto - Cursor en forma de I con escudo */
+input[type="text"]::-moz-selection,
+input[type="email"]::-moz-selection,
+input[type="password"]::-moz-selection,
+textarea::-moz-selection,
+*::-moz-selection {
+    background: rgba(59, 130, 246, 0.2);
+    color: #1d4ed8;
+}
+
+input[type="text"]::selection,
+input[type="email"]::selection,
+input[type="password"]::selection,
+textarea::selection,
+*::selection {
+    background: rgba(59, 130, 246, 0.2);
+    color: #1d4ed8;
+}
+
+/* Cursor para elementos seleccionables - Mano especializada con escudo */
+[data-selectable],
+.selectable,
+label,
+.checkbox-wrapper,
+.radio-wrapper {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M3 8c0-1 1-2 2-2h2c1 0 2-1 2-2s1-2 2-2 2 1 2 2v6l3-1c1 0 2 1 2 2l-1 5c0 1-1 2-2 2H7c-1 0-2-1-2-2V8z" fill="%233b82f6" stroke="%23ffffff" stroke-width="0.8"/><circle cx="10" cy="6" r="2" fill="%2305df72" opacity="0.8"/></svg>') 10 10, pointer;
+}
+
+/* Cursor para elementos de checkbox y radio - Selector con escudo */
+input[type="checkbox"],
+input[type="radio"] {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><rect x="2" y="2" width="14" height="14" rx="2" fill="none" stroke="%233b82f6" stroke-width="1.5"/><circle cx="9" cy="9" r="3" fill="%2305df72" opacity="0.7"/><path d="M6 9l2 2 4-4" stroke="%23ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>') 9 9, pointer;
+}
+
+/* Cursor para elementos de lista seleccionables */
+select option,
+.dropdown-item,
+.menu-item {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M2 6h14l-2 2H4l-2-2zM2 9h14l-2 2H4l-2-2zM2 12h14l-2 2H4l-2-2z" fill="%233b82f6" opacity="0.8"/><circle cx="15" cy="9" r="2" fill="%2305df72"/></svg>') 9 9, pointer;
+}
+
+/* Cursor para elementos de error - Escudo con X */
+.error,
+.danger,
+.invalid {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="%23dc2626" stroke="%23ffffff" stroke-width="1"/><path d="M6 6l6 6M12 6l-6 6" stroke="%23ffffff" stroke-width="2" stroke-linecap="round"/></svg>') 9 9, not-allowed;
+}
+
+/* Cursor para elementos de éxito - Escudo con check */
+.success,
+.valid,
+.completed {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="%2305df72" stroke="%23ffffff" stroke-width="1"/><path d="M6 9l2 2 4-4" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>') 9 9, pointer;
+}
+
+/* Cursor para elementos de redimensionar - Flechas con escudo */
+.resize-nw {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M2 2l5 0 0 2 -3 0 0 3 -2 0z" fill="%233b82f6"/><path d="M16 16l-5 0 0 -2 3 0 0 -3 2 0z" fill="%233b82f6"/><circle cx="9" cy="9" r="2" fill="%2305df72"/></svg>') 9 9, nw-resize;
+}
+
+.resize-ne {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M16 2l-5 0 0 2 3 0 0 3 2 0z" fill="%233b82f6"/><path d="M2 16l5 0 0 -2 -3 0 0 -3 -2 0z" fill="%233b82f6"/><circle cx="9" cy="9" r="2" fill="%2305df72"/></svg>') 9 9, ne-resize;
+}
+
+/* Cursor para navegación - Escudo con flecha */
+.nav-link,
+.breadcrumb a,
+.pagination a {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M9 2l6 7-6 7-1-1 5-6-5-6z" fill="%233b82f6" stroke="%23ffffff" stroke-width="0.5"/><circle cx="6" cy="9" r="2" fill="%2305df72"/></svg>') 9 9, pointer;
+}
+
+
+.cart-item,
+.add-to-cart,
+.cart-button {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M2 2h2l2.5 10h8l2-8H6" fill="none" stroke="%233b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="15" r="1.5" fill="%2305df72"/><circle cx="14" cy="15" r="1.5" fill="%2305df72"/><circle cx="9" cy="6" r="2" fill="%231d4ed8" opacity="0.7"/></svg>') 9 9, pointer;
+}
+
+/* Cursor para elementos de búsqueda - Lupa con escudo */
+.search-input,
+input[type="search"],
+.search-button {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><circle cx="7" cy="7" r="5" fill="none" stroke="%233b82f6" stroke-width="1.5"/><path d="m15 15-3-3" stroke="%233b82f6" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="7" r="2" fill="%2305df72" opacity="0.7"/></svg>') 9 9, pointer;
+}
+
+/* Cursor para servicios de seguridad - Escudo especializado */
+.service-sst,
+.security-service {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M9 1l7 3v6c0 4-7 7-7 7s-7-3-7-7V4l7-3z" fill="%2305df72" stroke="%23ffffff" stroke-width="1"/><path d="M6 8l2 2 4-4" stroke="%23ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>') 9 9, pointer;
+}
+
+/* Cursor para servicios de calidad */
+.service-quality {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M9 1l2.5 5 5.5 1-4 4 1 5.5-5-2.5-5 2.5 1-5.5-4-4 5.5-1z" fill="%23dc2626" stroke="%23ffffff" stroke-width="0.8"/><circle cx="9" cy="9" r="3" fill="%23ffffff" opacity="0.9"/></svg>') 9 9, pointer;
+}
+
+/* Cursor para elementos de ayuda - Signo de interrogación con escudo */
+.help,
+[title],
+.tooltip,
+.info {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="%23f59e0b" stroke="%23ffffff" stroke-width="1"/><text x="9" y="13" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="%23ffffff">?</text></svg>') 9 9, help;
+}
+
+/* Cursor para elementos expandibles - Mano con indicador de expansión */
+.expandable,
+.collapsible,
+.dropdown-toggle,
+.accordion-header,
+[data-toggle],
+.show-more {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M3 8c0-1 1-2 2-2h2c1 0 2-1 2-2s1-2 2-2 2 1 2 2v6l3-1c1 0 2 1 2 2l-1 5c0 1-1 2-2 2H7c-1 0-2-1-2-2V8z" fill="%233b82f6" stroke="%23ffffff" stroke-width="0.8"/><path d="M13 6l2 2-2 2" stroke="%2305df72" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>') 10 10, pointer;
+}
+
+/* Cursor para elementos de zoom - Lupa especializada */
+.zoomable,
+.zoom-in,
+[data-zoom] {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="8" cy="8" r="6" fill="none" stroke="%233b82f6" stroke-width="2"/><path d="M14 14l4 4" stroke="%233b82f6" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="8" r="3" fill="%2305df72" opacity="0.6"/><path d="M8 5v6M5 8h6" stroke="%23ffffff" stroke-width="1.5" stroke-linecap="round"/></svg>') 10 10, zoom-in;
+}
+
+/* Cursor para servicios ambientales */
+.service-environmental {
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7" fill="%2306b6d4" stroke="%23ffffff" stroke-width="1"/><path d="M6 9c0-2 1-3 3-3s3 1 3 3-1 3-3 3-3-1-3-3z" fill="%23ffffff"/><path d="M9 6v6M6 9h6" stroke="%2306b6d4" stroke-width="1"/></svg>') 9 9, pointer;
+}
+
+/* Animaciones para cursores dinámicos */
+@keyframes cursor-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Aplicar animación a cursores activos */
+.cursor-animated {
+    animation: cursor-pulse 1.5s infinite;
+}

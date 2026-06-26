@@ -18,7 +18,7 @@
                     <input type="email" name="email" id="email-input" required 
                            class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" 
                            placeholder="tu@correo.com">
-                    <span class="text-red-500 text-sm mt-1 hidden" data-renovar-error="email"></span>
+                    <span class="text-red-100 bg-red-900/50 text-sm mt-1 px-3 py-2 rounded-md border-l-4 border-red-400 hidden" data-renovar-error="email"></span>
                 </div>
 
                 <div id="user-services" class="hidden">
@@ -50,14 +50,14 @@
                         </select>
                     </div>
 
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+                    <button type="submit" class="btn w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
                         Enviar
                     </button>
                 </div>
 
                 <div id="no-services" class="hidden">
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                        <p class="text-gray-300 text-center">Usted no es cliente todavía, lo invitamos a que se convierta en nuestro cliente.</p>
+                    <div class="bg-yellow-900/30 border border-yellow-600/50 rounded-lg p-4 mb-6 border-l-4 border-l-yellow-400">
+                        <p class="text-yellow-100 text-center font-medium">Usted no es cliente todavía, lo invitamos a que se convierta en nuestro cliente.</p>
                     </div>
                     
                     <div class="space-y-4">
@@ -66,7 +66,7 @@
                             <input type="text" name="nombre_nuevo" required 
                                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" 
                                    placeholder="Tu nombre completo">
-                            <span class="text-red-500 text-sm mt-1 hidden" data-renovar-error="nombre_nuevo"></span>
+                            <span class="text-red-100 bg-red-900/50 text-sm mt-1 px-3 py-2 rounded-md border-l-4 border-red-400 hidden" data-renovar-error="nombre_nuevo"></span>
                         </div>
                         
                         <div>
@@ -74,18 +74,18 @@
                             <input type="tel" name="telefono_nuevo" required 
                                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" 
                                    placeholder="+57 300 123 4567">
-                            <span class="text-red-500 text-sm mt-1 hidden" data-renovar-error="telefono_nuevo"></span>
+                            <span class="text-red-100 bg-red-900/50 text-sm mt-1 px-3 py-2 rounded-md border-l-4 border-red-400 hidden" data-renovar-error="telefono_nuevo"></span>
                         </div>
                     </div>
                     
-                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition mt-6">
+                    <button type="submit" class="btn w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition mt-6">
                         Quiero comprar un producto
                     </button>
                 </div>
 
                 <div id="pending-orders" class="hidden">
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                        <p class="text-gray-300 text-center">Ya compraste servicios con nosotros, estamos validando tu pago, dentro de poco te confirmaremos, ¿quieres comprar más servicios?</p>
+                    <div class="bg-blue-900/30 border border-blue-600/50 rounded-lg p-4 mb-6 border-l-4 border-l-blue-400">
+                        <p class="text-blue-100 text-center font-medium">Ya compraste servicios con nosotros, estamos validando tu pago, dentro de poco te confirmaremos, ¿quieres comprar más servicios?</p>
                     </div>
                     
                     <div class="mb-6">
@@ -125,7 +125,7 @@
                             </select>
                         </div>
                         
-                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition">
+                        <button type="submit" class="btn w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition">
                             Quiero comprar más servicios
                         </button>
                     </div>

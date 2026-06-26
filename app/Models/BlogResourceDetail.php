@@ -2,27 +2,30 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BlogResourceDetail extends Model
 {
+    use HasFactory;
+
     protected $table = 'blog_resource_details';
 
     protected $fillable = [
+        'resource_type_id',
         'title',
         'description',
         'url_link',
         'image',
-        'resource_type_id',
-        'status',
+        'status'
     ];
 
     protected $casts = [
-        'status' => 'string',
+        'status' => 'boolean'
     ];
 
     public function resourceType()
     {
-        return $this->belongsTo(ResourcesType::class, 'resource_type_id');
+        return $this->belongsTo(ResourceType::class, 'resource_type_id');
     }
 }

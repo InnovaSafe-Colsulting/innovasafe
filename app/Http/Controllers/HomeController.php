@@ -2,35 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index']);
+    }
+
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
     public function index()
     {
-        // Verificar si el usuario está autenticado y tiene planes pagados
-        if (Auth::check()) {
-            $user = Auth::user();
-            
-            // Verificar si tiene al menos un plan pagado
-            $hasPaidPlan = DB::table('orders')
-                ->where('user_id', $user->id)
-                ->where('status', 'paid')
-                ->exists();
-            
-            if (!$hasPaidPlan) {
-                // Si no tiene planes pagados, desloguear
-                Auth::logout();
-                request()->session()->invalidate();
-                request()->session()->regenerateToken();
-                
-                return redirect('/#login-required')->with('error', 'Debe tener al menos un plan activo para acceder al sistema.');
-            }
-        }
-        
-        $typeServices = DB::table('type_services')->get();
-
+        $typeServices = \App\Models\TypeService::all();
         return view('home', compact('typeServices'));
     }
 }

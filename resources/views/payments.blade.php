@@ -28,20 +28,17 @@
                 <div>
                     <p class="text-gray-400 text-sm">{{ $subscription->billing_period ?? 'Plan actual' }}</p>
                     <h3 class="text-white text-xl font-bold">{{ $subscription->plan->name }}</h3>
-                    @if($orderStatuses->isNotEmpty())
-                        @php
-                            $latestOrder = $orderStatuses->first();
-                        @endphp
+                    @if($subscription->order_status)
                         <div class="mt-2">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                {{ $latestOrder->status === 'paid' ? 'bg-green-100 text-green-800' : 
-                                   ($latestOrder->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                                   ($latestOrder->status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')) }}">
-                                @switch($latestOrder->status)
+                                {{ $subscription->order_status === 'paid' ? 'bg-green-100 text-green-800' : 
+                                   ($subscription->order_status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                                   ($subscription->order_status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')) }}">
+                                @switch($subscription->order_status)
                                     @case('paid') ✓ Pagado @break
                                     @case('pending') ⏳ Pendiente @break
                                     @case('cancelled') ✗ Cancelado @break
-                                    @default {{ ucfirst($latestOrder->status) }}
+                                    @default {{ ucfirst($subscription->order_status) }}
                                 @endswitch
                             </span>
                         </div>

@@ -7,6 +7,8 @@ use App\Interfaces\AuthServiceInterface;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -21,86 +23,96 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
+        Log::info("Ingreso al login");
         $user = User::where('email', $request->email)->first();
-        if (!$user || !in_array($user->role_id, [1, 3])) {
-            $errorMessage = $user && !in_array($user->role_id, [1, 3])
-                ? 'No puede ingresar a la plataforma, porque no tiene los permisos necesarios, si considera que estamos equivocados por favor comuniquese con la empresa'
-                : 'Su usuario no existe o tiene algún dato mal, verifique.';
-            
+        $credentials = ['email' => $request->email, 'password' => $request->password];
+        
+        // Si es admin, autenticar y redirigir al panel administrativo
+        if ($user && $user->role_id == 1) {
+            if (Auth::guard('web')->attempt($credentials, false)) {
+                $user->increment('login_count');
+                $request->session()->regenerate();
+                
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Ingreso exitoso',
+                        'redirect' => '/admin'
+                    ]);
+                }
+                return redirect('/admin');
+            } else {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => ['email' => ['Credenciales incorrectas.']]
+                    ], 422);
+                }
+                return back()->withInput()->withErrors(['email' => 'Credenciales incorrectas.']);
+            }
+        }
+        
+        // Solo permitir clientes en esta ruta
+        if (!$user || $user->role_id != 3) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => $errorMessage,
-                ], $user ? 403 : 401);
+                    'errors' => ['email' => ['Credenciales incorrectas o usuario no autorizado.']]
+                ], 422);
             }
-            
-            return back()->withInput()->withErrors(['email' => $errorMessage]);
+            return back()->withInput()->withErrors(['email' => 'Credenciales incorrectas o usuario no autorizado.']);
         }
-
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
-
-        $result = $this->authService->login($credentials, false);
-
-        if ($result) {
-            // Verificar si el usuario tiene al menos un plan pagado (excepto admin)
-            if ($user->role_id != 1) {
-                $hasPaidPlan = \Illuminate\Support\Facades\DB::table('orders')
-                    ->where('user_id', $user->id)
-                    ->where('status', 'paid')
-                    ->exists();
-                
-                if (!$hasPaidPlan) {
-                    // Desloguear inmediatamente
-                    $this->authService->logout();
-                    
-                    $errorMessage = 'Debe tener al menos un plan activo para acceder al sistema.';
-                    
-                    if ($request->expectsJson()) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => $errorMessage,
-                        ], 403);
-                    }
-                    
-                    return back()->withInput()->withErrors(['email' => $errorMessage]);
+        
+        if (Auth::guard('web')->attempt($credentials, false)) {
+            $hasPaidPlan = DB::table('orders')
+            ->where('user_id', $user->id)
+            ->where('status', 'paid')
+            ->exists();
+            
+            logger()->info('Login OK', [
+               'check' => Auth::guard('web')->check(),
+               'user' => Auth::guard('web')->user()?->email,
+               'session' => session()->getId(),
+           ]);
+            if (!$hasPaidPlan) {
+                Auth::guard('web')->logout();
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => ['email' => ['Debe tener al menos un plan activo.']]
+                    ], 422);
                 }
+                return back()->withInput()->withErrors(['email' => 'Debe tener al menos un plan activo.']);
             }
             
-            // Incrementar contador de login
             $user->increment('login_count');
-            
             $request->session()->regenerate();
-
-            $redirect = $user->role_id == 1 ? '/admin' : '/home';
-
+            
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
-                    'redirect' => $redirect,
-                ], 200);
+                    'redirect' => '/home'
+                ]);
             }
-
-            return redirect($redirect);
+            return redirect()->intended('/home');
         }
 
-        $errorMessage = 'Su usuario no existe o tiene algún dato mal, verifique.';
-        
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => false,
-                'message' => $errorMessage,
-            ], 401);
+                'errors' => ['email' => ['Credenciales incorrectas.']]
+            ], 422);
         }
-
-        return back()->withInput()->withErrors(['email' => $errorMessage]);
+        return back()->withInput()->withErrors(['email' => 'Credenciales incorrectas.']);
     }
 
     public function logout(Request $request)
     {
-        $this->authService->logout();
+        // Detectar desde qué guard cerrar sesión
+        if (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+        }
+        
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

@@ -21,8 +21,15 @@ class PlanController extends Controller
             ->where('status', '1')
             ->get()
             ->groupBy('type_module');
+            
+        // Obtener detalles de módulos para Auditoría (ID = 2)
+        $auditoriaModules = DB::table('type_services_detail')
+            ->where('type_service_id', 2)
+            ->where('status', '1')
+            ->get()
+            ->groupBy('type_module');
         
-        return view('plans', compact('plans', 'typeServices', 'sstModules'));
+        return view('plans', compact('plans', 'typeServices', 'sstModules', 'auditoriaModules'));
     }
     
     public function getPlansApi(Request $request)

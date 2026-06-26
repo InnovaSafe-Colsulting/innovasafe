@@ -44,7 +44,7 @@
                 <input type="text" name="phone" placeholder="3001234567" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
                 <span class="text-red-400 text-xs mt-1 hidden" data-error="phone"></span>
             </div>
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+            <button type="submit" class="btn w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
                 Enviar
             </button>
         </form>

@@ -165,14 +165,14 @@
                     @elseif($plan->id >= 1 && $plan->id <= 5)
                         {{-- Botón de agregar al carrito para planes normales --}}
                         @auth
-                            <button type="submit" form="plan-form-{{ $plan->id }}" class="w-full bg-[#2268bd] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#1a4c8c] transition-colors flex items-center justify-center gap-2">
+                            <button type="submit" form="plan-form-{{ $plan->id }}" class="btn w-full bg-[#2268bd] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#1a4c8c] transition-colors flex items-center justify-center gap-2">
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
                                 </svg>
                                 Agregar al carrito
                             </button>
                         @else
-                            <button onclick="alert('Debes iniciar sesión para agregar productos al carrito')" class="w-full bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg cursor-not-allowed flex items-center justify-center gap-2">
+                            <button onclick="alert('Debes iniciar sesión para agregar productos al carrito')" class="btn w-full bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg cursor-not-allowed flex items-center justify-center gap-2">
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                                 </svg>
@@ -181,7 +181,7 @@
                         @endauth
                     @else
                         {{-- Botón normal para otros planes --}}
-                        <button class="w-full bg-[#2268bd] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#1a4c8c] transition-colors">
+                        <button class="btn w-full bg-[#2268bd] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#1a4c8c] transition-colors">
                             Agregar a carrito
                         </button>
                     @endif
@@ -217,14 +217,28 @@
         @foreach($typeServices as $index => $service)
             <div id="service-{{ $service->id }}-content" class="tab-content {{ $index === 0 ? '' : 'hidden' }}">
                 @if($service->id == 1 && $service->status == '1')
-                    {{-- Contenido SST con datos dinámicos --}}
+                    {{-- Contenido SST --}}
+                    <div class="text-center py-16">
+                        <div class="max-w-md mx-auto">
+                            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg class="w-10 h-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Seguridad y Salud en el Trabajo - SST</h3>
+                            <p class="text-gray-600 mb-6">Implementa y gestiona tu Sistema de Gestión de Seguridad y Salud en el Trabajo de manera integral. Protege a tu equipo, cumple con la normatividad y reduce los riesgos laborales en tu organización.</p>
+                            <span class="inline-block bg-blue-500 text-white px-6 py-2 rounded-full font-semibold">Solícitalo</span>
+                        </div>
+                    </div>
+                @elseif($service->id == 2 && $service->status == '1')
+                    {{-- Contenido Auditoría con datos dinámicos --}}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {{-- Módulos Básicos --}}
-                        @if(isset($sstModules['Basico']))
+                        @if(isset($auditoriaModules['Basico']))
                         <div class="bg-white rounded-2xl border border-gray-200 p-8">
-                            <span class="inline-block bg-[#0a0f2c] text-white text-xs font-bold px-4 py-1 rounded-full mb-6">{{ count($sstModules['Basico']) }} MÓDULOS BÁSICOS</span>
+                            <span class="inline-block bg-[#0a0f2c] text-white text-xs font-bold px-4 py-1 rounded-full mb-6">{{ count($auditoriaModules['Basico']) }} MÓDULOS BÁSICOS</span>
                             <ol class="space-y-3 text-sm text-gray-700">
-                                @foreach($sstModules['Basico'] as $index => $module)
+                                @foreach($auditoriaModules['Basico'] as $index => $module)
                                 <li class="flex items-start gap-2">
                                     <span class="font-bold text-[#2268bd]">{{ $index + 1 }}.</span>
                                     {{ $module->module }}
@@ -235,16 +249,20 @@
                         @endif
 
                         {{-- Módulos Adicionales --}}
-                        @if(isset($sstModules['Adicional']))
+                        @if(isset($auditoriaModules['Adicional']))
                         <div class="bg-white rounded-2xl border border-gray-200 p-8">
-                            <span class="inline-block bg-[#0a0f2c] text-white text-xs font-bold px-4 py-1 rounded-full mb-6">{{ count($sstModules['Adicional']) }} MÓDULOS ADICIONALES (PLAN ELITE)</span>
+                            <span class="inline-block bg-[#0a0f2c] text-white text-xs font-bold px-4 py-1 rounded-full mb-6">{{ count($auditoriaModules['Adicional']) }} MÓDULOS ADICIONALES (PLAN ELITE)</span>
                             <ol class="space-y-4 text-sm text-gray-700">
-                                @foreach($sstModules['Adicional'] as $index => $module)
+                                @foreach($auditoriaModules['Adicional'] as $index => $module)
                                 <li class="flex items-center gap-3">
-                                    @if(str_contains(strtolower($module->module), 'inspecci'))
-                                        <svg class="w-6 h-6 text-[#2268bd] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                                    @elseif(str_contains(strtolower($module->module), 'comité'))
-                                        <svg class="w-6 h-6 text-[#2268bd] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    @if(str_contains(strtolower($module->module), 'evaluación') || str_contains(strtolower($module->module), 'evaluacion'))
+                                        <svg class="w-6 h-6 text-[#2268bd] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                                    @elseif(str_contains(strtolower($module->module), 'plan') || str_contains(strtolower($module->module), 'planificación'))
+                                        <svg class="w-6 h-6 text-[#2268bd] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 8h6m-6-4h6m2-5H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2z"/></svg>
+                                    @elseif(str_contains(strtolower($module->module), 'control') || str_contains(strtolower($module->module), 'seguimiento'))
+                                        <svg class="w-6 h-6 text-[#2268bd] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                                    @elseif(str_contains(strtolower($module->module), 'informe') || str_contains(strtolower($module->module), 'reporte'))
+                                        <svg class="w-6 h-6 text-[#2268bd] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                     @else
                                         <svg class="w-6 h-6 text-[#2268bd] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                     @endif
@@ -255,8 +273,7 @@
                         </div>
                         @endif
                     </div>
-                @elseif($service->status == '1')
-                    {{-- Otros servicios activos sin contenido aún --}}
+                @elseif($service->status == '1' && !in_array($service->id, [1, 2]))
                     <div class="text-center py-16">
                         <div class="max-w-md mx-auto">
                             <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -266,7 +283,7 @@
                             </div>
                             <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ $service->name }}</h3>
                             <p class="text-gray-600 mb-6">{{ $service->description ?: 'Contenido en desarrollo para este servicio.' }}</p>
-                            <span class="inline-block bg-blue-500 text-white px-6 py-2 rounded-full font-semibold">Próximamente</span>
+                            <span class="inline-block bg-blue-500 text-white px-6 py-2 rounded-full font-semibold">Solícitalo</span>
                         </div>
                     </div>
                 @else
@@ -280,7 +297,7 @@
                             </div>
                             <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ $service->name }}</h3>
                             <p class="text-gray-600 mb-6">{{ $service->description ?: 'Estamos trabajando en este increíble servicio que transformará tu experiencia.' }}</p>
-                            <span class="inline-block bg-yellow-500 text-white px-6 py-2 rounded-full font-semibold">Muy Pronto</span>
+                            <span class="inline-block bg-yellow-500 text-white px-6 py-2 rounded-full font-semibold">Solícitalo</span>
                         </div>
                     </div>
                 @endif

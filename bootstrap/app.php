@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'check.password.change' => \App\Http\Middleware\CheckPasswordChange::class,
             'check.paid.plans' => \App\Http\Middleware\CheckPaidPlans::class,
+            'admin.only' => \App\Http\Middleware\AdminOnly::class,
+            'client.only' => \App\Http\Middleware\ClientOnly::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

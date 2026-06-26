@@ -412,6 +412,26 @@ document.addEventListener('DOMContentLoaded', function () {
     function sendNewClientEmail(formData, customMessage = null) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         
+        // Obtener todos los botones de submit del formulario
+        const submitButtons = document.querySelectorAll('#form-renovar button[type="submit"]');
+        const originalButtonTexts = new Map();
+        
+        // Deshabilitar todos los botones y cambiar texto
+        submitButtons.forEach(button => {
+            originalButtonTexts.set(button, button.textContent);
+            button.disabled = true;
+            button.textContent = "Enviando...";
+            button.classList.add('opacity-50', 'cursor-not-allowed');
+        });
+        
+        function restoreButtons() {
+            submitButtons.forEach(button => {
+                button.disabled = false;
+                button.textContent = originalButtonTexts.get(button);
+                button.classList.remove('opacity-50', 'cursor-not-allowed');
+            });
+        }
+        
         if (customMessage) {
             formData.append('custom_message', customMessage);
         }
@@ -444,16 +464,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
                 hideAllSections();
+                // No restaurar botones aquí porque el modal se cierra
             } else if (result.status === 422) {
-                // Error de validación
+                // Error de validación - restaurar botones
+                restoreButtons();
                 console.log('Validation errors:', result.data.errors);
                 showToast('Error de validación: ' + (result.data.message || 'Revisa los datos ingresados'), 'danger');
             } else {
+                // Otros errores - restaurar botones
+                restoreButtons();
                 console.log('Server error:', result.data);
                 showToast(result.data.message || 'Error al enviar solicitud', 'danger');
             }
         })
         .catch(error => {
+            // Error de red - restaurar botones
+            restoreButtons();
             console.error('Network error:', error);
             showToast('Error de conexión', 'danger');
         });
@@ -811,6 +837,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const submitBtn = formLogin.querySelector('button[type="submit"]');
             const originalBtnHtml = submitBtn.innerHTML;
             submitBtn.disabled = true;
+            submitBtn.classList.add('cursor-thinking');
+            document.body.classList.add('cursor-thinking');
             submitBtn.innerHTML = `
                 <span style="display:inline-flex;align-items:center;justify-content:center;gap:.5rem;">
                     <svg style="width:1.1rem;height:1.1rem;animation:spin .8s linear infinite" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -821,6 +849,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             function restoreBtn() {
                 submitBtn.disabled = false;
+                submitBtn.classList.remove('cursor-thinking');
+                document.body.classList.remove('cursor-thinking');
                 submitBtn.innerHTML = originalBtnHtml;
             }
             // ──────────────────────────────────────────────────────────────

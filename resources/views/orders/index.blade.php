@@ -26,7 +26,7 @@
                         <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
                             <div>
                                 <p class="text-sm font-semibold text-gray-700">Orden #{{ $order->id }}</p>
-                                <p class="text-xs text-gray-500">{{ $order->created_at->format('d/m/Y H:i') }}</p>
+                                <p class="text-xs text-gray-500">{{ $order->created_at ? $order->created_at->diffForHumans() : 'Sin fecha' }}</p>
                             </div>
                             <div>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
@@ -43,7 +43,7 @@
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Método de pago:</p>
-                                <p class="text-sm font-medium text-gray-700 capitalize">{{ $order->payment_method }}</p>
+                                <p class="text-sm font-medium text-gray-700 capitalize">{{ $order->paymentType->name ?? 'No definido' }}</p>
                             </div>
                         </div>
                         <div class="text-right">
@@ -73,7 +73,7 @@
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <p class="text-lg font-bold text-gray-900">${{ number_format($item->total) }}</p>
+                                        <p class="text-lg font-bold text-gray-900">${{ number_format($item->total_price) }}</p>
                                         <p class="text-xs text-gray-500">COP</p>
                                     </div>
                                 </div>
@@ -109,7 +109,7 @@
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                         <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-sm">
                             <span class="text-gray-500">Subtotal: <span class="font-semibold text-gray-700">${{ number_format($order->subtotal) }}</span></span>
-                            <span class="text-gray-500">IVA (19%): <span class="font-semibold text-gray-700">${{ number_format($order->tax) }}</span></span>
+                            <span class="text-gray-500">IVA (19%): <span class="font-semibold text-gray-700">${{ number_format($order->iva) }}</span></span>
                         </div>
                         @if($order->payment_screenshot)
                             <a href="{{ Storage::url($order->payment_screenshot) }}" target="_blank" 

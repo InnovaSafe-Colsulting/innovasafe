@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Interfaces\ConfigurationCompanyServiceInterface;
 use App\Interfaces\NavigationMenuServiceInterface;
 use App\Interfaces\TypeServiceServiceInterface;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,6 +19,13 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if (request()->is('admin*')) {
+        Log::info('Admin request', [
+            'check' => Auth::check(),
+            'user' => Auth::user()?->email,
+            'role' => Auth::user()?->role_id,
+        ]);
+    }
         View::composer('layouts.app', function ($view) {
             $configService = app(ConfigurationCompanyServiceInterface::class);
             $configs = $configService->getAll();

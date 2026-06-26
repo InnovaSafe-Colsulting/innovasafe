@@ -1,0 +1,175 @@
+/* ====================================
+   BOTÓN FLOTANTE WHATSAPP INNOVASAFE
+   ==================================== */
+
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22"><path d="M4 10c0-1 1-2 2-2h3c1 0 2-1 2-2V4c0-1 1-2 2-2s2 1 2 2v8l4-1c1 0 2 1 1 2l-2 6c0 1-1 2-2 2H8c-1 0-2-1-2-2l-2-7z" fill="%233b82f6" stroke="%23ffffff" stroke-width="1"/><path d="M11 2l3 2-3 2-3-2z" fill="%2305df72"/><circle cx="11" cy="8" r="1.5" fill="%23ffffff"/></svg>') 11 11, pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: whatsapp-pulse 2s infinite;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1) translateY(-3px);
+    animation: none;
+}
+
+.whatsapp-float:active {
+    transform: scale(0.95);
+}
+
+.whatsapp-btn {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #25D366 0%, #128C7E 50%, #075E54 100%);
+    box-shadow: 
+        0 8px 25px rgba(37, 211, 102, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        inset 0 2px 4px rgba(255, 255, 255, 0.2),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    cursor: inherit;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+    background: linear-gradient(145deg, #2BE46B 0%, #1A9A8C 50%, #0A6B5F 100%);
+    box-shadow: 
+        0 12px 35px rgba(37, 211, 102, 0.6),
+        0 6px 18px rgba(0, 0, 0, 0.2),
+        inset 0 3px 6px rgba(255, 255, 255, 0.3),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.whatsapp-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: conic-gradient(from 45deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+    border-radius: 50%;
+    animation: whatsapp-rotate 3s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.whatsapp-btn:hover::before {
+    opacity: 1;
+}
+
+.whatsapp-icon {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ícono WhatsApp + Escudo InnovaSafe personalizado */
+.whatsapp-svg {
+    width: 45px;
+    height: 45px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Tooltip informativo */
+.whatsapp-float::after {
+    content: 'Contáctanos por WhatsApp';
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(30, 41, 59, 0.95);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.whatsapp-float::before {
+    content: '';
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-left-color: rgba(30, 41, 59, 0.95);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover::after,
+.whatsapp-float:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Animaciones */
+@keyframes whatsapp-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes whatsapp-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .whatsapp-float {
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+    }
+    
+    .whatsapp-svg {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .whatsapp-float::after {
+        display: none;
+    }
+    
+    .whatsapp-float::before {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .whatsapp-float {
+        bottom: 15px;
+        right: 15px;
+        width: 55px;
+        height: 55px;
+    }
+    
+    .whatsapp-svg {
+        width: 32px;
+        height: 32px;
+    }
+}

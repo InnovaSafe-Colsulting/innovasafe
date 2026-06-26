@@ -24,12 +24,10 @@ class ProfileController extends Controller
     public function updatePassword(Request $request)
     {
         $request->validate([
-            'current_password' => 'required',
             'new_password' => [
                 'required',
-                'confirmed',
                 'min:8',
-                'max:12',
+                'max:20',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/'
             ]
         ], [
@@ -37,28 +35,32 @@ class ProfileController extends Controller
         ]);
 
         $user = Auth::user();
+        $newPassword = $request->new_password;
         
-        // Verificar contraseña actual
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'La contraseña actual es incorrecta']);
-        }
-        
-        // Verificar que no sea una contraseña repetida
+        // Obtener historial de contraseñas ordenado por fecha (más reciente primero)
         $passwordHistory = DB::table('passwords_history_by_user')
             ->where('user_id', $user->id)
-            ->pluck('password');
+            ->orderBy('created_at', 'desc')
+            ->get();
             
-        foreach ($passwordHistory as $oldPassword) {
-            if (Hash::check($request->new_password, $oldPassword)) {
-                return back()->withErrors(['new_password' => 'No puede reutilizar una contraseña anterior']);
+        // Verificar si la contraseña ya fue usada
+        foreach ($passwordHistory as $index => $historyRecord) {
+            if (Hash::check($newPassword, $historyRecord->password)) {
+                // Si está en las últimas 20 contraseñas, no permitir
+                if ($index < 20) {
+                    return back()->withErrors([
+                        'new_password' => 'Este password ya fue usado, todavía no lo puede volver a usar'
+                    ]);
+                }
+                // Si hay 20+ passwords después, permitir reutilización
+                break;
             }
         }
         
-        // Actualizar contraseña
-        $newHashedPassword = Hash::make($request->new_password);
+        // Actualizar contraseña en users
+        $newHashedPassword = Hash::make($newPassword);
         $user->update([
-            'password' => $newHashedPassword,
-            'password_changed' => true
+            'password' => $newHashedPassword
         ]);
         
         // Guardar en historial
