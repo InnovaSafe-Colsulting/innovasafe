@@ -813,7 +813,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeModal();
-            closeDemoModal();
             closeRenovarModal();
             closeLoginModal();
             closeServicesModal();

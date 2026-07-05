@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class ClientOnly
 {
@@ -42,28 +41,18 @@ class ClientOnly
             return redirect('/login')->with('error', 'Acceso no autorizado. Solo clientes.');
         }
         
-        // Verificar planes pagados para clientes
-        $hasPaidPlan = DB::table('orders')
-            ->where('user_id', $user->id)
-            ->where('status', 'paid')
-            ->exists();
-        
-        if (!$hasPaidPlan) {
+        // Verificar que el cliente esté activo
+        if ($user->active != '1') {
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-            
+
             if ($request->expectsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Debe tener al menos un plan activo para acceder al sistema.',
-                    'redirect' => '/#login-required'
-                ], 403);
+                return response()->json(['success' => false, 'message' => 'Su usuario todavía no está autorizado.', 'redirect' => '/login'], 403);
             }
-            
-            return redirect('/#login-required')->with('error', 'Debe tener al menos un plan activo para acceder al sistema.');
+            return redirect('/login')->with('error', 'Su usuario todavía no está autorizado.');
         }
-        
+
         return $next($request);
     }
 }

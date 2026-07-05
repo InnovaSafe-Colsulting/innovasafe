@@ -197,22 +197,13 @@
 
                 {{-- Desktop Menu --}}
                 <div class="hidden lg:flex items-center gap-8">
-                    @guest
-                        <a href="/" class="nav-link text-sm text-white hover:text-green-400 transition">Inicio</a>
-                        <a href="{{ route('services') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Servicios</a>
-                        <a href="{{ route('about') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Nosotros</a>
-                        <a href="{{ route('resources') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Recursos</a>
-                        <a href="{{ route('contact') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Contacto</a>
-                    @endguest
+                    <a href="/" class="nav-link text-sm text-white hover:text-green-400 transition">Inicio</a>
+                    <a href="{{ route('services') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Servicios</a>
+                    <a href="{{ route('about') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Nosotros</a>
+                    <a href="{{ route('resources') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Recursos</a>
+                    <a href="{{ route('plans') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Planes</a>
+                    <a href="{{ route('contact') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Contacto</a>
                     @auth
-                        <a href="/home" class="nav-link text-sm text-white hover:text-green-400 transition">Inicio</a>
-                        <a href="{{ route('services') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Servicios</a>
-                        <a href="{{ route('about') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Nosotros</a>
-                        <a href="{{ route('resources') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Recursos</a>
-                        <a href="{{ route('contact') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Contacto</a>
-                        <a href="{{ route('payments') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Pagos</a>
-                        <a href="{{ route('plans') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Planes</a>
-                        <a href="{{ route('orders.index') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Historial</a>
                         <div class="relative group">
                             <button class="nav-link p-2 hover:bg-white/10 rounded-lg transition relative cart-button">
                                 <svg class="w-5 h-5 text-gray-300 hover:text-green-400 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
@@ -326,9 +317,6 @@
                 {{-- Right Actions --}}
                 <div class="hidden lg:flex items-center gap-3">
                     @guest
-                        <a href="#" class="btn-login nav-btn-login text-sm text-white border border-white/30 px-4 py-2 rounded-lg hover:bg-white/10 transition">
-                            Iniciar Sesión
-                        </a>
                         <a href="#" class="btn-asesoria text-sm text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition flex items-center gap-2">
                             Solicitar Asesoría <span>&rarr;</span>
                         </a>
@@ -363,27 +351,18 @@
 
         {{-- Mobile Menu --}}
         <div id="mobile-menu" class="hidden lg:hidden bg-[#0a0f2c] border-t border-white/10 px-4 pb-4">
+            <a href="/" class="block py-2 text-sm text-white">Inicio</a>
+            <a href="{{ route('services') }}" class="block py-2 text-sm text-gray-300">Servicios</a>
+            <a href="{{ route('about') }}" class="block py-2 text-sm text-gray-300">Nosotros</a>
+            <a href="{{ route('resources') }}" class="block py-2 text-sm text-gray-300">Recursos</a>
+            <a href="{{ route('plans') }}" class="block py-2 text-sm text-gray-300">Planes</a>
+            <a href="{{ route('contact') }}" class="block py-2 text-sm text-gray-300">Contacto</a>
             @guest
-                <a href="/" class="block py-2 text-sm text-white">Inicio</a>
-                <a href="{{ route('services') }}" class="block py-2 text-sm text-gray-300">Servicios</a>
-                <a href="{{ route('about') }}" class="block py-2 text-sm text-gray-300">Nosotros</a>
-                <a href="{{ route('resources') }}" class="block py-2 text-sm text-gray-300">Recursos</a>
-                <a href="{{ route('contact') }}" class="block py-2 text-sm text-gray-300">Contacto</a>
                 <div class="flex flex-col gap-2 mt-3 pt-3 border-t border-white/10">
-                    <a href="#" class="btn-login text-sm text-center text-white border border-white/30 px-4 py-2 rounded-lg">Iniciar Sesión</a>
                     <a href="#" class="btn-asesoria text-sm text-center text-white bg-blue-600 px-4 py-2 rounded-lg">Solicitar Asesoría &rarr;</a>
                 </div>
             @endguest
             @auth
-                <a href="/home" class="block py-2 text-sm text-white">Inicio</a>
-                <a href="{{ route('services') }}" class="block py-2 text-sm text-gray-300">Servicios</a>
-                <a href="{{ route('about') }}" class="block py-2 text-sm text-gray-300">Nosotros</a>
-                <a href="{{ route('resources') }}" class="block py-2 text-sm text-gray-300">Recursos</a>
-                <a href="{{ route('contact') }}" class="block py-2 text-sm text-gray-300">Contacto</a>
-                <a href="{{ route('payments') }}" class="block py-2 text-sm text-gray-300">Pagos</a>
-                <a href="{{ route('plans') }}" class="block py-2 text-sm text-gray-300">Planes</a>
-                <a href="{{ route('orders.index') }}" class="block py-2 text-sm text-gray-300">Historial</a>
-                {{-- <a href="{{ route('profile') }}" class="block py-2 text-sm text-gray-300">Perfil</a> --}}
                 <form method="POST" action="{{ route('logout') }}" class="mt-3 pt-3 border-t border-white/10">
                     @csrf
                     <button type="submit" class="w-full text-sm text-white bg-red-600 px-4 py-2 rounded-lg">Cerrar sesión</button>

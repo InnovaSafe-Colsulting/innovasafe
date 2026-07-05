@@ -30,13 +30,15 @@ Route::get('/videos/{filename}', function ($filename) {
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/contacto', [ContactController::class, 'showForm'])->name('contact');
 Route::post('/contacto', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:5,1');
-Route::post('/solicitar-asesoria', [ContactController::class, 'storeAdvisory'])->name('advisory.store')->middleware('throttle:5,1');
+Route::post('/solicitar-asesoria', [ContactController::class, 'storeAdvisory'])->name('advisory.store')->middleware('throttle:10,1');
 Route::post('/validar-email-renovar', [ContactController::class, 'validateEmailForRenewal'])->name('validate-email.renewal')->middleware('throttle:10,1');
 Route::post('/solicitar-nuevo-cliente', [ContactController::class, 'storeNewClient'])->name('new-client.store')->middleware('throttle:5,1');
 Route::get('/servicios', [ServiceController::class, 'index'])->name('services');
 Route::post('/solicitar-informacion-servicio', [ServiceController::class, 'sendInfo'])->name('service.info');
 Route::get('/nosotros', [AboutController::class, 'index'])->name('about');
-Route::get('/recursos', [ResourceController::class, 'index'])->name('resources');
+Route::get('/recursos', [ResourceController::class, 'publicIndex'])->name('resources');
+Route::get('/planes', [PlanController::class, 'index'])->name('plans');
+Route::post('/adquirir-producto', [ContactController::class, 'storeAdquirirProducto'])->name('adquirir.producto')->middleware('throttle:10,1');
 Route::get('/blogs', [BlogResourceDetailController::class, 'index'])->name('blog.index');
 Route::get('/recursos/descargables', [DocumentsResourcesDetailController::class, 'index'])->name('documents.index');
 
@@ -48,7 +50,6 @@ Route::middleware(['auth', 'client.only'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home.dashboard');
     Route::post('/renovar/servicios', [ContactController::class, 'getUserServices'])->name('renovar.services');
     Route::get('/pagos', [PaymentController::class, 'index'])->name('payments');
-    Route::get('/planes', [PlanController::class, 'index'])->name('plans');
     Route::get('/carrito', [CartController::class, 'index'])->name('cart');
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::put('/cart/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
@@ -73,6 +74,7 @@ Route::middleware(['auth', 'admin.only'])->prefix('admin')->name('admin.')->grou
     Route::post('/gestionar-recursos', [ResourceController::class, 'store'])->name('resources.store');
     Route::get('/gestionar-recursos/{id}/{type}/editar', [ResourceController::class, 'edit'])->name('resources.edit');
     Route::put('/gestionar-recursos/{id}/{type}', [ResourceController::class, 'update'])->name('resources.update');
+    Route::patch('/gestionar-recursos/{id}/{type}/status', [ResourceController::class, 'toggleStatus'])->name('resources.toggle-status');
     Route::delete('/gestionar-recursos/{id}/{type}', [ResourceController::class, 'destroy'])->name('resources.destroy');
 });
 

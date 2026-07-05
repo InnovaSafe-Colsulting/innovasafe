@@ -19,7 +19,7 @@ class AdminOnly
                     'redirect' => '/login'
                 ], 401);
             }
-            return redirect('/login');
+            return redirect('/admin/login');
         }
         
         $user = Auth::user();
@@ -34,11 +34,11 @@ class AdminOnly
                 return response()->json([
                     'success' => false,
                     'message' => 'Acceso no autorizado. Solo administradores.',
-                    'redirect' => '/login'
+                    'redirect' => '/admin/login'
                 ], 403);
             }
             
-            return redirect('/login')->with('error', 'Acceso no autorizado. Solo administradores.');
+            return redirect('/admin/login')->with('error', 'Acceso no autorizado. Solo administradores.');
         }
         
         return $next($request);

@@ -130,46 +130,6 @@
     </div>
 </div>
 
-<!-- Modal Eliminar Producto -->
-<div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black bg-opacity-50" role="dialog" aria-modal="true">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-auto transform transition-all">
-        <!-- Header -->
-        <div class="flex items-center justify-between p-6 border-b border-gray-100">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                    <svg class="w-5 h-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900">Eliminar Producto</h3>
-            </div>
-            <button onclick="hideDeleteModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-        
-        <!-- Content -->
-        <div class="p-6">
-            <p class="text-gray-600 mb-6">
-                ¿Estás seguro de que quieres eliminar este producto del carrito? Esta acción no se puede deshacer.
-            </p>
-            
-            <!-- Buttons -->
-            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <button onclick="hideDeleteModal()" 
-                        class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300">
-                    Cancelar
-                </button>
-                <button onclick="confirmDelete()" 
-                        class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500">
-                    Eliminar
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Modal Vaciar Carrito -->
 <div id="clearCartModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black bg-opacity-50" role="dialog" aria-modal="true">
@@ -301,8 +261,25 @@ function updateCartQuantity(itemId, quantity) {
 }
 
 function removeFromCart(productId) {
-    // Mostrar modal personalizado
-    showDeleteModal(productId);
+    fetch(`/cart/remove/${productId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const itemElement = document.getElementById(`cart-item-${productId}`);
+            itemElement.style.transition = 'opacity 0.3s ease';
+            itemElement.style.opacity = '0';
+            setTimeout(() => window.location.reload(), 300);
+        } else {
+            showAlert('Error al eliminar el producto', 'error');
+        }
+    })
+    .catch(error => showAlert('Error al eliminar el producto', 'error'));
 }
 
 function clearCart() {
@@ -331,54 +308,6 @@ function showEmptyCart() {
 }
 
 // Funciones para modales personalizados
-let currentProductToDelete = null;
-
-function showDeleteModal(productId) {
-    currentProductToDelete = productId;
-    document.getElementById('deleteModal').classList.remove('hidden');
-    document.getElementById('deleteModal').classList.add('flex');
-    document.body.classList.add('overflow-hidden');
-}
-
-function hideDeleteModal() {
-    document.getElementById('deleteModal').classList.add('hidden');
-    document.getElementById('deleteModal').classList.remove('flex');
-    document.body.classList.remove('overflow-hidden');
-    currentProductToDelete = null;
-}
-
-function confirmDelete() {
-    if (currentProductToDelete) {
-        fetch(`/cart/remove/${currentProductToDelete}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const itemElement = document.getElementById(`cart-item-${currentProductToDelete}`);
-                itemElement.style.transition = 'opacity 0.3s ease';
-                itemElement.style.opacity = '0';
-                
-                setTimeout(() => {
-                    // Recargar la página para mostrar los cambios
-                    window.location.reload();
-                }, 300);
-            } else {
-                showAlert('Error al eliminar el producto', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showAlert('Error al eliminar el producto', 'error');
-        });
-        
-        hideDeleteModal();
-    }
-}
 
 function showClearCartModal() {
     document.getElementById('clearCartModal').classList.remove('hidden');

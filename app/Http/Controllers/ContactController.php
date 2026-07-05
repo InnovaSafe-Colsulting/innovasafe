@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\AdquirirProductoMail;
+use App\Mail\SolicitudAsesoriaMail;
 
 class ContactController extends Controller
 {
@@ -100,14 +102,58 @@ class ContactController extends Controller
     {
         try {
             $data = [
-                'names' => $request->names,
+                'names'      => $request->names,
                 'last_names' => $request->last_names,
-                'email' => $request->email,
-                'cellphone' => $request->phone,
-                'service_id' => $request->type_service,
+                'email'      => $request->email,
+                'cellphone'  => $request->phone,
+                'service_id' => $request->type_service[0],
             ];
 
             $this->contactService->create($data);
+
+            $serviceNombres = DB::table('type_services')
+                ->whereIn('id', $request->type_service)
+                ->pluck('name')
+                ->implode(', ');
+
+            $datos = [
+                'names'             => $request->names,
+                'last_names'        => $request->last_names,
+                'email'             => $request->email,
+                'phone'             => $request->phone,
+                'type_service_name' => $serviceNombres,
+            ];
+
+            $destinatarios = [
+                'gerenciatecnologica@innovasafeconsulting.com',
+                'gerenciageneral@innovasafeconsulting.com',
+                'gerenciaproyectos@innovasafeconsulting.com',
+            ];
+            foreach ($destinatarios as $email) {
+                Mail::to($email)->send(new SolicitudAsesoriaMail($datos));
+            }
+
+            $config = DB::table('configuration_company')->where('id', 2)->first();
+            if ($config && !empty($config->value)) {
+                $numero = preg_replace('/[^0-9]/', '', $config->value);
+                $mensaje = urlencode(
+                    "Nueva solicitud de asesoría:\n" .
+                    "Cliente: {$datos['names']} {$datos['last_names']}\n" .
+                    "Email: {$datos['email']}\n" .
+                    "Teléfono: {$datos['phone']}\n" .
+                    "Servicio: {$datos['type_service_name']}"
+                );
+                $url = "https://api.callmebot.com/whatsapp.php?phone=57{$numero}&text={$mensaje}&apikey=YOUR_API_KEY";
+                try {
+                    $ch = curl_init($url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+                    curl_exec($ch);
+                    curl_close($ch);
+                } catch (\Exception $e) {
+                    Log::warning('WhatsApp send failed: ' . $e->getMessage());
+                }
+            }
 
             return response()->json([
                 'success' => true,
@@ -116,7 +162,7 @@ class ContactController extends Controller
         } catch (\Exception $e) {
             Log::error('Error al guardar solicitud de asesoría: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
-                'data' => $request->all(),
+                'data'  => $request->all(),
             ]);
 
             return response()->json([
@@ -245,6 +291,87 @@ class ContactController extends Controller
         }
     }
     
+    public function storeAdquirirProducto(Request $request)
+    {
+        try {
+            $request->validate([
+                'names'        => 'required|string|max:120',
+                'last_names'   => 'required|string|max:120',
+                'email'        => 'required|email',
+                'phone'        => 'required|string|max:20',
+                'type_service' => 'required|exists:type_services,id',
+                'productos'    => 'required|string',
+            ]);
+
+            $productos = json_decode($request->productos, true);
+            if (empty($productos)) {
+                return response()->json(['success' => false, 'errors' => ['productos' => ['Debes seleccionar al menos un producto.']]], 422);
+            }
+
+            $serviceNombre = DB::table('type_services')->where('id', $request->type_service)->value('name');
+
+            $cliente = [
+                'names'             => $request->names,
+                'last_names'        => $request->last_names,
+                'email'             => $request->email,
+                'phone'             => $request->phone,
+                'type_service_name' => $serviceNombre,
+                'message'           => $request->message ?? null,
+            ];
+
+            // Guardar en contacts
+            $this->contactService->create([
+                'names'      => $request->names,
+                'last_names' => $request->last_names,
+                'email'      => $request->email,
+                'cellphone'  => $request->phone,
+                'service_id' => $request->type_service,
+                'message'    => 'Solicitud de adquisición de producto: ' . implode(', ', array_column($productos, 'name')),
+            ]);
+
+            // Enviar correos
+            $destinatarios = [
+                'gerenciatecnologica@innovasafeconsulting.com',
+                'gerenciageneral@innovasafeconsulting.com',
+                'gerenciaproyectos@innovasafeconsulting.com',
+            ];
+            foreach ($destinatarios as $email) {
+                Mail::to($email)->send(new AdquirirProductoMail($cliente, $productos));
+            }
+
+            // Enviar WhatsApp via CallMeBot
+            $config = DB::table('configuration_company')->where('id', 2)->first();
+            if ($config && !empty($config->value)) {
+                $numero = preg_replace('/[^0-9]/', '', $config->value);
+                $mensaje = urlencode(
+                    "Nueva solicitud de adquisición:\n" .
+                    "Cliente: {$cliente['names']} {$cliente['last_names']}\n" .
+                    "Email: {$cliente['email']}\n" .
+                    "Teléfono: {$cliente['phone']}\n" .
+                    "Productos: " . implode(', ', array_column($productos, 'name'))
+                );
+                $url = "https://api.callmebot.com/whatsapp.php?phone=57{$numero}&text={$mensaje}&apikey=YOUR_API_KEY";
+                try {
+                    $ch = curl_init($url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+                    curl_exec($ch);
+                    curl_close($ch);
+                } catch (\Exception $e) {
+                    Log::warning('WhatsApp send failed: ' . $e->getMessage());
+                }
+            }
+
+            return response()->json(['success' => true], 201);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            Log::error('Error en storeAdquirirProducto: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error al procesar la solicitud.'], 500);
+        }
+    }
+
     public function validateEmailForRenewal(Request $request)
     {
         try {

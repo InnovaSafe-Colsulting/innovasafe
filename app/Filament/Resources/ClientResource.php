@@ -14,6 +14,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -65,14 +66,9 @@ class ClientResource extends Resource
                     ->label('Teléfono')
                     ->searchable()
                     ->sortable(),
-                IconColumn::make('email_verified_at')
-                    ->label('Verificado')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
-                    ->trueColor('success')
-                    ->falseColor('danger')
-                    ->getStateUsing(fn ($record) => !is_null($record->email_verified_at)),
+                ToggleColumn::make('active')
+                    ->label('Activo')
+                    ->updateStateUsing(fn ($record, $state) => $record->update(['active' => $state ? '1' : '0'])),
                 TextColumn::make('created_at')
                     ->label('Registrado')
                     ->dateTime('d/m/Y H:i')
@@ -81,12 +77,12 @@ class ClientResource extends Resource
             ])
             ->searchPlaceholder('Buscar')
             ->filters([
-                Filter::make('verified')
-                    ->label('Verificados')
-                    ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
-                Filter::make('unverified')
-                    ->label('No Verificados')
-                    ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
+                Filter::make('active')
+                    ->label('Activos')
+                    ->query(fn (Builder $query): Builder => $query->where('active', '1')),
+                Filter::make('inactive')
+                    ->label('Inactivos')
+                    ->query(fn (Builder $query): Builder => $query->where('active', '0')),
             ])
             ->recordActions([
                 EditAction::make()->label('Editar'),

@@ -28,7 +28,8 @@ class StoreAdvisoryRequest extends FormRequest
             'last_names' => 'required|regex:/^[\pL\s]+$/u',
             'email' => 'required|email',
             'phone' => 'required|regex:/^[0-9]+$/',
-            'type_service' => 'required|exists:type_services,id',
+            'type_service' => 'required|array|min:1',
+            'type_service.*' => 'exists:type_services,id',
             'recaptcha_token' => ['required', new Recaptcha],
         ];
     }
@@ -44,8 +45,10 @@ class StoreAdvisoryRequest extends FormRequest
             'email.email' => 'Ingresa un correo electrónico válido.',
             'phone.required' => 'El número telefónico es obligatorio.',
             'phone.regex' => 'El teléfono solo puede contener números.',
-            'type_service.required' => 'Selecciona un tipo de servicio.',
-            'type_service.exists' => 'El tipo de servicio seleccionado no es válido.',
+            'type_service.required' => 'Selecciona al menos un tipo de servicio.',
+            'type_service.array'    => 'El tipo de servicio debe ser un arreglo.',
+            'type_service.min'      => 'Selecciona al menos un tipo de servicio.',
+            'type_service.*.exists' => 'Uno de los servicios seleccionados no es válido.',
         ];
     }
 

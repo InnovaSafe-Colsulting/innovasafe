@@ -31,7 +31,7 @@
                     <span class="text-[#1d4ed8]">EXCELENCIA</span>
                 </h1>
                 <p class="mt-6 text-gray-400 text-base lg:text-lg max-w-lg leading-relaxed">
-                    Ofrecemos soluciones integrales en Seguridad y Salud en el Trabajo, Calidad, Gestión Ambiental y Transformación Digital. Impulsamos organizaciones seguras, eficientes y sostenibles.
+                    En InnovaSafe Consulting entendemos que cada organización es única. Por eso no nos limitamos a una sola solución — ofrecemos acompañamiento integral adaptado a la necesidad real de cada cliente: desde consultoría estratégica, implementación de sistemas de gestión, hasta herramientas digitales. Estamos donde nos necesites.
                 </p>
                 <div class="flex flex-wrap gap-4 mt-8">
                     <a href="#" class="btn-asesoria bg-blue-600 hover:bg-blue-700 text-white px-7 py-3.5 rounded-lg font-semibold transition-all flex items-center gap-2 shadow-lg shadow-blue-600/25">
