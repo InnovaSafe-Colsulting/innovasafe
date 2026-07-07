@@ -40,6 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 'logout' => \Filament\Navigation\MenuItem::make()
                     ->label('Cerrar sesión')
+                    ->url('/admin-logout')
                     ->icon('heroicon-o-arrow-right-on-rectangle'),
             ])
             ->darkMode(true)
@@ -93,7 +94,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                \App\Http\Middleware\AdminOnly::class,
+                \Filament\Http\Middleware\Authenticate::class,
             ]);
     }
 }

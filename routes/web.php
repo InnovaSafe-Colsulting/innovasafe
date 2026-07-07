@@ -46,6 +46,13 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout.get');
 
+Route::get('/admin-logout', function () {
+    Auth::guard('web')->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/admin/login');
+})->name('admin.logout.get');
+
 Route::middleware(['auth', 'client.only'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home.dashboard');
     Route::post('/renovar/servicios', [ContactController::class, 'getUserServices'])->name('renovar.services');
