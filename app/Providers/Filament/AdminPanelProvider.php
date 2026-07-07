@@ -38,13 +38,8 @@ class AdminPanelProvider extends PanelProvider
             ->authPasswordBroker('users')
             ->profile()
             ->userMenuItems([
-                'profile' => \Filament\Navigation\MenuItem::make()
-                    ->label('Perfil')
-                    ->url(fn (): string => '#')
-                    ->icon('heroicon-o-user-circle'),
                 'logout' => \Filament\Navigation\MenuItem::make()
                     ->label('Cerrar sesión')
-                    ->url('/logout')
                     ->icon('heroicon-o-arrow-right-on-rectangle'),
             ])
             ->darkMode(true)
@@ -72,12 +67,6 @@ class AdminPanelProvider extends PanelProvider
             ->globalSearch(true)
             ->globalSearchKeyBindings(['ctrl+k', 'cmd+k'])
             ->sidebarCollapsibleOnDesktop()
-            ->userMenuItems([
-                'logout' => \Filament\Navigation\MenuItem::make()
-                    ->label('Cerrar sesión')
-                    ->url('/logout')
-                    ->icon('heroicon-o-arrow-right-on-rectangle'),
-            ])
 
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
