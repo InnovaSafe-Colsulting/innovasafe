@@ -63,7 +63,7 @@ class ResourceController extends Controller
     public function create()
     {
         $resourceTypes = DB::table('resources_types')->get();
-        return view('admin.resources.create', compact('resourceTypes'));
+        return view('filament.pages.recursos.create', compact('resourceTypes'));
     }
 
     public function store(StoreResourceRequest $request)
@@ -71,20 +71,21 @@ class ResourceController extends Controller
         $validated = $request->validated();
 
         try {
-            $blogTypeId = DB::table('resources_types')->where('resource', 'Blog')->value('id');
-        if ((string)$validated['type_resource_id'] === (string)$blogTypeId) {
+            if ($validated['type_resource_id'] === 'blog') {
+                $blogTypeId = DB::table('resources_types')->where('resource', 'Blog')->value('id');
                 $imagePath = null;
                 if ($request->hasFile('image')) {
                     $imagePath = $request->file('image')->store('blog-images', 'public');
                 }
                 DB::table('blog_resource_details')->insert([
-                    'title'       => $validated['title'],
-                    'description' => $validated['description'],
-                    'url_link'    => $validated['url_link'],
-                    'image'       => $imagePath,
-                    'status'      => $validated['status'],
-                    'created_at'  => now(),
-                    'updated_at'  => now(),
+                    'title'            => $validated['title'],
+                    'description'      => $validated['description'],
+                    'url_link'         => $validated['url_link'],
+                    'image'            => $imagePath,
+                    'resource_type_id' => $blogTypeId,
+                    'status'           => $validated['status'],
+                    'created_at'       => now(),
+                    'updated_at'       => now(),
                 ]);
             } else {
                 $filePath = null;

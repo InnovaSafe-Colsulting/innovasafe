@@ -19,12 +19,17 @@ class ResourcesManagementPage extends Page
         return 'Gestión de Recursos';
     }
 
+    public static function getNavigationIcon(): string
+    {
+        return 'heroicon-o-folder-open';
+    }
+
     public $resources;
 
     public function mount()
     {
         $documentResources = DB::table('documents_resources_details')
-            ->join('resources_types', 'documents_resources_details.type_resource_id', '=', 'resources_types.id')
+            ->join('resources_types', 'documents_resources_details.resource_type_id', '=', 'resources_types.id')
             ->select(
                 'documents_resources_details.id',
                 'documents_resources_details.title',
@@ -32,14 +37,14 @@ class ResourcesManagementPage extends Page
                 DB::raw('NULL as link'),
                 DB::raw('NULL as image'),
                 'documents_resources_details.path',
-                'resources_types.name as type_name',
+                'resources_types.resource as type_name',
                 'documents_resources_details.status',
                 'documents_resources_details.created_at',
                 'documents_resources_details.updated_at',
                 DB::raw("'document' as source_table")
             );
 
-        $blogResources = DB::table('blog_resources_details')
+        $blogResources = DB::table('blog_resource_details')
             ->select(
                 'id',
                 'title',

@@ -16,8 +16,9 @@ class StoreResourceRequest extends FormRequest
             'status'           => 'required|in:0,1',
         ];
 
-        $blogId = \Illuminate\Support\Facades\DB::table('resources_types')->where('resource', 'Blog')->value('id');
-        if ((string)$this->type_resource_id === (string)$blogId) {
+        $isBlog = $this->type_resource_id === 'blog';
+
+        if ($isBlog) {
             $rules['description'] = 'required|string|max:1000';
             $rules['url_link']    = 'required|url|max:500';
             $rules['image']       = 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048';

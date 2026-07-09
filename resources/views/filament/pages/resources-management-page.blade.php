@@ -1,1 +1,147 @@
-<x-filament-panels::page>\n    <div class=\"space-y-6\">\n        {{-- Header con botón crear --}}\n        <div class=\"flex justify-between items-center\">\n            <h1 class=\"text-2xl font-bold text-gray-900 dark:text-white\">Gestión de Recursos</h1>\n            <a href=\"{{ route('admin.resources.create') }}\" class=\"inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-500 focus:outline-none focus:border-primary-700 focus:ring focus:ring-primary-200 active:bg-primary-600 disabled:opacity-25 transition\">\n                <svg class=\"w-4 h-4 mr-2\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 6v6m0 0v6m0-6h6m-6 0H6\"/>\n                </svg>\n                Crear Recurso\n            </a>\n        </div>\n\n        {{-- Tabla de recursos --}}\n        @if($resources && $resources->count() > 0)\n            <div class=\"bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden\">\n                <div class=\"overflow-x-auto\">\n                    <table class=\"min-w-full divide-y divide-gray-200 dark:divide-gray-700\">\n                        <thead class=\"bg-gray-50 dark:bg-gray-700\">\n                            <tr>\n                                <th class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider\">Título</th>\n                                <th class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider\">Descripción</th>\n                                <th class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider\">Link</th>\n                                <th class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider\">Imagen</th>\n                                <th class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider\">Archivo</th>\n                                <th class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider\">Tipo</th>\n                                <th class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider\">Estado</th>\n                                <th class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider\">Creado</th>\n                                <th class=\"px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider\">Opciones</th>\n                            </tr>\n                        </thead>\n                        <tbody class=\"bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700\">\n                            @foreach($resources as $resource)\n                                <tr class=\"hover:bg-gray-50 dark:hover:bg-gray-700\">\n                                    <td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white\">\n                                        {{ $resource->title }}\n                                    </td>\n                                    <td class=\"px-6 py-4 text-sm text-gray-900 dark:text-gray-300\">\n                                        @if($resource->description)\n                                            <div class=\"max-w-xs\">\n                                                {{ Str::limit($resource->description, 50) }}\n                                            </div>\n                                        @else\n                                            <span class=\"text-gray-400\">-</span>\n                                        @endif\n                                    </td>\n                                    <td class=\"px-6 py-4 text-sm text-gray-900 dark:text-gray-300\">\n                                        @if($resource->link)\n                                            <a href=\"{{ $resource->link }}\" target=\"_blank\" class=\"text-primary-600 hover:text-primary-800\">\n                                                {{ Str::limit($resource->link, 30) }}\n                                            </a>\n                                        @else\n                                            <span class=\"text-gray-400\">-</span>\n                                        @endif\n                                    </td>\n                                    <td class=\"px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300\">\n                                        @if($resource->image)\n                                            <img src=\"{{ asset('storage/' . $resource->image) }}\" alt=\"Imagen\" class=\"h-10 w-10 rounded-lg object-cover\">\n                                        @else\n                                            <span class=\"text-gray-400\">-</span>\n                                        @endif\n                                    </td>\n                                    <td class=\"px-6 py-4 text-sm text-gray-900 dark:text-gray-300\">\n                                        @if($resource->path)\n                                            <a href=\"{{ asset('storage/' . $resource->path) }}\" target=\"_blank\" class=\"text-primary-600 hover:text-primary-800\">\n                                                <svg class=\"w-5 h-5\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\">\n                                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z\"/>\n                                                </svg>\n                                            </a>\n                                        @else\n                                            <span class=\"text-gray-400\">-</span>\n                                        @endif\n                                    </td>\n                                    <td class=\"px-6 py-4 whitespace-nowrap\">\n                                        <span class=\"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $resource->source_table == 'blog' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}\">\n                                            {{ $resource->type_name }}\n                                        </span>\n                                    </td>\n                                    <td class=\"px-6 py-4 whitespace-nowrap\">\n                                        @if($resource->status == 1)\n                                            <span class=\"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800\">\n                                                Activo\n                                            </span>\n                                        @else\n                                            <span class=\"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800\">\n                                                Inactivo\n                                            </span>\n                                        @endif\n                                    </td>\n                                    <td class=\"px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400\">\n                                        {{ $resource->created_at ? \\Carbon\\Carbon::parse($resource->created_at)->format('d/m/Y H:i') : '-' }}\n                                    </td>\n                                    <td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\">\n                                        <div class=\"flex items-center space-x-2\">\n                                            <a href=\"{{ route('admin.resources.edit', [$resource->id, $resource->source_table]) }}\" class=\"text-primary-600 hover:text-primary-900\">\n                                                <svg class=\"w-5 h-5\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\">\n                                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z\"/>\n                                                </svg>\n                                            </a>\n                                            <button onclick=\"confirmDelete({{ $resource->id }}, '{{ $resource->source_table }}', '{{ $resource->title }}')\" class=\"text-red-600 hover:text-red-900\">\n                                                <svg class=\"w-5 h-5\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\">\n                                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16\"/>\n                                                </svg>\n                                            </button>\n                                        </div>\n                                    </td>\n                                </tr>\n                            @endforeach\n                        </tbody>\n                    </table>\n                </div>\n            </div>\n        @else\n            <div class=\"bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6\">\n                <div class=\"text-center\">\n                    <svg class=\"mx-auto h-12 w-12 text-gray-400\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\">\n                        <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z\"/>\n                    </svg>\n                    <h3 class=\"mt-2 text-sm font-medium text-gray-900 dark:text-white\">No hay recursos</h3>\n                    <p class=\"mt-1 text-sm text-gray-500 dark:text-gray-400\">Comienza creando tu primer recurso.</p>\n                    <div class=\"mt-6\">\n                        <a href=\"{{ route('admin.resources.create') }}\" class=\"inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-500 focus:outline-none focus:border-primary-700 focus:ring focus:ring-primary-200 active:bg-primary-600 disabled:opacity-25 transition\">\n                            Crear Recurso\n                        </a>\n                    </div>\n                </div>\n            </div>\n        @endif\n    </div>\n\n    {{-- Modal de confirmación --}}\n    <div id=\"deleteModal\" class=\"fixed inset-0 z-50 hidden\" style=\"background: rgba(0,0,0,0.5);\">\n        <div class=\"flex items-center justify-center min-h-screen p-4\">\n            <div class=\"bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full\">\n                <div class=\"p-6\">\n                    <div class=\"flex items-center\">\n                        <div class=\"flex-shrink-0\">\n                            <svg class=\"h-6 w-6 text-red-600\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\">\n                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z\"/>\n                            </svg>\n                        </div>\n                        <div class=\"ml-3\">\n                            <h3 class=\"text-lg font-medium text-gray-900 dark:text-white\">Confirmar eliminación</h3>\n                            <div class=\"mt-2\">\n                                <p class=\"text-sm text-gray-500 dark:text-gray-400\">\n                                    ¿Estás seguro de que quieres eliminar el recurso <span id=\"resourceTitle\" class=\"font-medium\"></span>? Esta acción no se puede deshacer.\n                                </p>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"mt-5 sm:mt-4 sm:flex sm:flex-row-reverse\">\n                        <button type=\"button\" onclick=\"deleteResource()\" class=\"w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm\">\n                            Eliminar\n                        </button>\n                        <button type=\"button\" onclick=\"closeDeleteModal()\" class=\"mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:w-auto sm:text-sm\">\n                            Cancelar\n                        </button>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        let resourceToDelete = null;\n\n        function confirmDelete(id, type, title) {\n            resourceToDelete = { id, type };\n            document.getElementById('resourceTitle').textContent = title;\n            document.getElementById('deleteModal').classList.remove('hidden');\n        }\n\n        function closeDeleteModal() {\n            resourceToDelete = null;\n            document.getElementById('deleteModal').classList.add('hidden');\n        }\n\n        function deleteResource() {\n            if (!resourceToDelete) return;\n            \n            fetch(`/admin/gestionar-recursos/${resourceToDelete.id}/${resourceToDelete.type}`, {\n                method: 'DELETE',\n                headers: {\n                    'X-CSRF-TOKEN': document.querySelector('meta[name=\"csrf-token\"]').getAttribute('content'),\n                    'Accept': 'application/json'\n                }\n            })\n            .then(response => response.json())\n            .then(data => {\n                if (data.success) {\n                    closeDeleteModal();\n                    location.reload();\n                } else {\n                    alert('Error al eliminar el recurso');\n                }\n            })\n            .catch(error => {\n                alert('Error al eliminar el recurso');\n            });\n        }\n    </script>\n</x-filament-panels::page>
+<x-filament-panels::page>
+    <div>
+        {{-- Botón crear --}}
+        <div style="display:flex; justify-content:flex-end; margin-bottom:1.5rem;">
+            <a href="{{ route('admin.resources.create') }}"
+               style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.5rem 1.2rem; background:#2563eb; color:#fff; border-radius:0.5rem; font-size:0.85rem; font-weight:600; text-decoration:none;">
+                + Crear Recurso
+            </a>
+        </div>
+
+        {{-- Tabla --}}
+        @if($resources && $resources->count() > 0)
+            <div style="overflow-x:auto; border-radius:0.75rem; border:1px solid #374151;">
+                <table style="width:100%; border-collapse:collapse; font-size:0.875rem;">
+                    <thead>
+                        <tr style="background:#1f2937; color:#9ca3af; text-transform:uppercase; font-size:0.75rem;">
+                            <th style="padding:0.75rem 1rem; text-align:left;">Título</th>
+                            <th style="padding:0.75rem 1rem; text-align:left;">Descripción</th>
+                            <th style="padding:0.75rem 1rem; text-align:left;">Link</th>
+                            <th style="padding:0.75rem 1rem; text-align:left;">Imagen</th>
+                            <th style="padding:0.75rem 1rem; text-align:left;">Archivo</th>
+                            <th style="padding:0.75rem 1rem; text-align:left;">Tipo</th>
+                            <th style="padding:0.75rem 1rem; text-align:left;">Estado</th>
+                            <th style="padding:0.75rem 1rem; text-align:left;">Creado</th>
+                            <th style="padding:0.75rem 1rem; text-align:left;">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($resources as $resource)
+                            <tr style="border-top:1px solid #374151;">
+                                <td style="padding:0.75rem 1rem; color:#f9fafb; font-weight:500;">{{ $resource->title }}</td>
+                                <td style="padding:0.75rem 1rem; color:#d1d5db; max-width:200px;">
+                                    {{ $resource->description ? Str::limit($resource->description, 50) : '-' }}
+                                </td>
+                                <td style="padding:0.75rem 1rem;">
+                                    @if($resource->link)
+                                        <a href="{{ $resource->link }}" target="_blank" style="color:#60a5fa;">{{ Str::limit($resource->link, 25) }}</a>
+                                    @else
+                                        <span style="color:#6b7280;">-</span>
+                                    @endif
+                                </td>
+                                <td style="padding:0.75rem 1rem;">
+                                    @if($resource->image)
+                                        <img src="{{ asset('storage/' . $resource->image) }}" style="height:2.5rem; width:2.5rem; border-radius:0.375rem; object-fit:cover;">
+                                    @else
+                                        <span style="color:#6b7280;">-</span>
+                                    @endif
+                                </td>
+                                <td style="padding:0.75rem 1rem;">
+                                    @if($resource->path)
+                                        <a href="{{ asset('storage/' . $resource->path) }}" target="_blank" style="color:#60a5fa;">Ver archivo</a>
+                                    @else
+                                        <span style="color:#6b7280;">-</span>
+                                    @endif
+                                </td>
+                                <td style="padding:0.75rem 1rem;">
+                                    <span style="padding:0.2rem 0.6rem; border-radius:9999px; font-size:0.75rem; font-weight:600; background:{{ $resource->source_table == 'blog' ? '#4c1d95' : '#1e3a5f' }}; color:{{ $resource->source_table == 'blog' ? '#c4b5fd' : '#93c5fd' }};">
+                                        {{ $resource->type_name }}
+                                    </span>
+                                </td>
+                                <td style="padding:0.75rem 1rem;">
+                                    @if($resource->status == 1)
+                                        <span style="padding:0.2rem 0.6rem; border-radius:9999px; font-size:0.75rem; font-weight:600; background:#14532d; color:#86efac;">Activo</span>
+                                    @else
+                                        <span style="padding:0.2rem 0.6rem; border-radius:9999px; font-size:0.75rem; font-weight:600; background:#7f1d1d; color:#fca5a5;">Inactivo</span>
+                                    @endif
+                                </td>
+                                <td style="padding:0.75rem 1rem; color:#9ca3af; white-space:nowrap;">
+                                    {{ $resource->created_at ? \Carbon\Carbon::parse($resource->created_at)->format('d/m/Y H:i') : '-' }}
+                                </td>
+                                <td style="padding:0.75rem 1rem;">
+                                    <div style="display:flex; gap:0.75rem; align-items:center;">
+                                        <a href="{{ route('admin.resources.edit', [$resource->id, $resource->source_table]) }}"
+                                           style="color:#60a5fa; font-weight:500; text-decoration:none;">Editar</a>
+                                        <button onclick="confirmDelete({{ $resource->id }}, '{{ $resource->source_table }}', '{{ addslashes($resource->title) }}')"
+                                                style="color:#f87171; font-weight:500; background:none; border:none; cursor:pointer; padding:0;">Eliminar</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <div style="text-align:center; padding:3rem; background:#1f2937; border-radius:0.75rem;">
+                <p style="color:#9ca3af; margin-bottom:1rem;">No hay recursos registrados.</p>
+                <a href="{{ route('admin.resources.create') }}"
+                   style="padding:0.5rem 1.2rem; background:#2563eb; color:#fff; border-radius:0.5rem; font-size:0.85rem; font-weight:600; text-decoration:none;">
+                    Crear Recurso
+                </a>
+            </div>
+        @endif
+    </div>
+
+    {{-- Modal eliminación --}}
+    <div id="deleteModal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.6); align-items:center; justify-content:center;">
+        <div style="background:#1f2937; border-radius:0.75rem; padding:1.5rem; max-width:28rem; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+            <h3 style="color:#f9fafb; font-size:1.1rem; font-weight:600; margin-bottom:0.75rem;">Confirmar eliminación</h3>
+            <p style="color:#9ca3af; font-size:0.9rem; margin-bottom:1.5rem;">
+                ¿Estás seguro de que quieres eliminar <strong id="resourceTitle" style="color:#f9fafb;"></strong>? Esta acción no se puede deshacer.
+            </p>
+            <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+                <button onclick="closeDeleteModal()"
+                        style="padding:0.5rem 1rem; background:#374151; color:#d1d5db; border:none; border-radius:0.5rem; cursor:pointer; font-size:0.875rem;">
+                    Cancelar
+                </button>
+                <button onclick="deleteResource()"
+                        style="padding:0.5rem 1rem; background:#dc2626; color:#fff; border:none; border-radius:0.5rem; cursor:pointer; font-size:0.875rem; font-weight:600;">
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let resourceToDelete = null;
+
+        function confirmDelete(id, type, title) {
+            resourceToDelete = { id, type };
+            document.getElementById('resourceTitle').textContent = title;
+            const modal = document.getElementById('deleteModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            resourceToDelete = null;
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        function deleteResource() {
+            if (!resourceToDelete) return;
+            fetch(`/admin/gestionar-recursos/${resourceToDelete.id}/${resourceToDelete.type}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) { closeDeleteModal(); location.reload(); }
+                else alert('Error al eliminar el recurso');
+            })
+            .catch(() => alert('Error al eliminar el recurso'));
+        }
+    </script>
+</x-filament-panels::page>

@@ -1,6 +1,6 @@
-<x-filament-panels::page>
+<x-filament-panels::layout.index>
 <style>
-    .rform-wrap { max-width:36rem; }
+    .rform-wrap { max-width:36rem; margin: 2rem auto; padding: 0 1rem; }
     .rform-card { background:#111827; border:1px solid #1e293b; border-radius:.875rem; overflow:hidden; }
     .rform-hd { display:flex; align-items:center; gap:.625rem; padding:.875rem 1.25rem; border-bottom:1px solid #1e293b; }
     .rform-hd-back { color:#475569; background:none; border:none; cursor:pointer; padding:.2rem; border-radius:.3rem; text-decoration:none; display:flex; }
@@ -17,7 +17,6 @@
         transition:border-color .15s; box-sizing:border-box;
     }
     .rform-input:focus, .rform-select:focus, .rform-textarea:focus { border-color:#3b82f6; }
-    .rform-input.err, .rform-select.err, .rform-textarea.err { border-color:#ef4444; }
     .rform-textarea { resize:vertical; min-height:90px; }
     .rform-file { width:100%; background:#0d1117; border:1px solid #1e293b; border-radius:.5rem; padding:.45rem .75rem; font-size:.78rem; color:#94a3b8; box-sizing:border-box; }
     .rform-hint { font-size:.7rem; color:#475569; }
@@ -36,19 +35,18 @@
             <a href="{{ route('filament.admin.pages.recursos-page') }}" class="rform-hd-back">
                 <svg style="width:16px;height:16px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
             </a>
-            <h2>Información del Recurso</h2>
+            <h2>Crear Recurso</h2>
         </div>
 
         <form action="{{ route('admin.resources.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="rform-body">
 
-                {{-- Tipo --}}
                 <div class="rform-group">
                     <label class="rform-label">Tipo de Recurso <span>*</span></label>
-                    <select name="type_resource_id" id="rtype" required onchange="rtoggle(this.value)"
-                        class="rform-select {{ $errors->has('type_resource_id') ? 'err' : '' }}">
+                    <select name="type_resource_id" id="type_resource_id" required onchange="toggleFields(this.value)" class="rform-select">
                         <option value="">Seleccionar tipo</option>
+                        <option value="blog" {{ old('type_resource_id') == 'blog' ? 'selected' : '' }}>Blog</option>
                         @foreach($resourceTypes as $type)
                             <option value="{{ $type->id }}" {{ old('type_resource_id') == $type->id ? 'selected' : '' }}>{{ $type->resource }}</option>
                         @endforeach
@@ -56,25 +54,21 @@
                     @error('type_resource_id')<p class="rform-err">{{ $message }}</p>@enderror
                 </div>
 
-                {{-- Título --}}
                 <div class="rform-group">
                     <label class="rform-label">Título <span>*</span></label>
-                    <input type="text" name="title" value="{{ old('title') }}" required
-                        class="rform-input {{ $errors->has('title') ? 'err' : '' }}">
+                    <input type="text" name="title" value="{{ old('title') }}" required class="rform-input">
                     @error('title')<p class="rform-err">{{ $message }}</p>@enderror
                 </div>
 
-                {{-- Campos Blog --}}
-                <div id="rfields-blog" style="display:none;display:flex;flex-direction:column;gap:1rem" class="hidden-section">
+                <div id="fields-blog" style="display:none; flex-direction:column; gap:1rem;">
                     <div class="rform-group">
                         <label class="rform-label">Descripción <span>*</span></label>
-                        <textarea name="description" class="rform-textarea {{ $errors->has('description') ? 'err' : '' }}">{{ old('description') }}</textarea>
+                        <textarea name="description" class="rform-textarea">{{ old('description') }}</textarea>
                         @error('description')<p class="rform-err">{{ $message }}</p>@enderror
                     </div>
                     <div class="rform-group">
                         <label class="rform-label">Enlace <span>*</span></label>
-                        <input type="url" name="url_link" value="{{ old('url_link') }}" placeholder="https://..."
-                            class="rform-input {{ $errors->has('url_link') ? 'err' : '' }}">
+                        <input type="url" name="url_link" value="{{ old('url_link') }}" placeholder="https://..." class="rform-input">
                         @error('url_link')<p class="rform-err">{{ $message }}</p>@enderror
                     </div>
                     <div class="rform-group">
@@ -85,21 +79,19 @@
                     </div>
                 </div>
 
-                {{-- Campos Documento --}}
-                <div id="rfields-doc" style="display:none" class="hidden-section">
+                <div id="fields-document" style="display:none;">
                     <div class="rform-group">
                         <label class="rform-label">Archivo <span>*</span></label>
-                        <input type="file" name="path" class="rform-file {{ $errors->has('path') ? 'err' : '' }}">
+                        <input type="file" name="path" class="rform-file">
                         <p class="rform-hint">PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX — máx. 10MB</p>
                         @error('path')<p class="rform-err">{{ $message }}</p>@enderror
                     </div>
                 </div>
 
-                {{-- Estado --}}
                 <div class="rform-group">
                     <label class="rform-label">Estado <span>*</span></label>
                     <select name="status" required class="rform-select">
-                        <option value="1" {{ old('status','1') == '1' ? 'selected' : '' }}>Activo</option>
+                        <option value="1" {{ old('status', '1') == '1' ? 'selected' : '' }}>Activo</option>
                         <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Inactivo</option>
                     </select>
                 </div>
@@ -119,16 +111,17 @@
 </div>
 
 <script>
-const BLOG_ID = '{{ $resourceTypes ? collect($resourceTypes)->firstWhere("resource", "Blog")->id ?? 3 : 3 }}';
-function rtoggle(val) {
-    document.getElementById('rfields-blog').style.display = 'none';
-    document.getElementById('rfields-doc').style.display  = 'none';
-    if (val === BLOG_ID) document.getElementById('rfields-blog').style.display = 'flex';
-    else if (val !== '') document.getElementById('rfields-doc').style.display  = 'flex';
+function toggleFields(value) {
+    const blog = document.getElementById('fields-blog');
+    const doc  = document.getElementById('fields-document');
+    blog.style.display = 'none';
+    doc.style.display  = 'none';
+    if (value === 'blog') blog.style.display = 'flex';
+    else if (value !== '') doc.style.display = 'block';
 }
 document.addEventListener('DOMContentLoaded', () => {
-    const v = document.getElementById('rtype').value;
-    if (v) rtoggle(v);
+    const val = document.getElementById('type_resource_id').value;
+    if (val) toggleFields(val);
 });
 </script>
-</x-filament-panels::page>
+</x-filament-panels::layout.index>

@@ -1,4 +1,4 @@
-<x-filament-panels::page>
+<x-filament-panels::layout.index>
 <style>
     .rform-wrap { max-width:36rem; }
     .rform-card { background:#111827; border:1px solid #1e293b; border-radius:.875rem; overflow:hidden; }
@@ -137,4 +137,4 @@
         </form>
     </div>
 </div>
-</x-filament-panels::page>
+</x-filament-panels::layout.index>
