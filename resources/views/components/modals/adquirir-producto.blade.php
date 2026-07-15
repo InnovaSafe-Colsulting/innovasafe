@@ -61,6 +61,10 @@
                     <span class="text-red-400 text-xs mt-1 hidden" data-error="productos"></span>
                 </div>
 
+                <p class="text-xs text-gray-400 text-center leading-relaxed">
+                    Al dar click en <span class="text-white font-medium">Enviar Solicitud</span> nos indicarás que quieres completar tu compra. En ese momento te llamaremos para completarla.
+                </p>
+
                 <button type="submit" id="btn-adquirir-submit" class="w-full text-white font-semibold py-3 rounded-lg transition flex items-center justify-center gap-2" style="background:linear-gradient(135deg,#1a3a6b,#2268bd);">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                     Enviar Solicitud

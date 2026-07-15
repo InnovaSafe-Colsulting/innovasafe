@@ -222,7 +222,7 @@
                             </div>
                             <h3 class="text-2xl font-bold text-gray-900 mb-3">Seguridad y Salud en el Trabajo - SST</h3>
                             <p class="text-gray-600 mb-6">Implementa y gestiona tu Sistema de Gestión de Seguridad y Salud en el Trabajo de manera integral. Protege a tu equipo, cumple con la normatividad y reduce los riesgos laborales en tu organización.</p>
-                            <span class="inline-block bg-blue-500 text-white px-6 py-2 rounded-full font-semibold">Solícitalo</span>
+                            {{-- <span class="inline-block bg-blue-500 text-white px-6 py-2 rounded-full font-semibold">Solícitalo</span> --}}
                         </div>
                     </div>
                 @elseif($service->id == 2 && $service->status == '1')
@@ -278,7 +278,7 @@
                             </div>
                             <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ $service->name }}</h3>
                             <p class="text-gray-600 mb-6">{{ $service->description ?: 'Contenido en desarrollo para este servicio.' }}</p>
-                            <span class="inline-block bg-blue-500 text-white px-6 py-2 rounded-full font-semibold">Solícitalo</span>
+                            {{-- <span class="inline-block bg-blue-500 text-white px-6 py-2 rounded-full font-semibold">Solícitalo</span> --}}
                         </div>
                     </div>
                 @else
@@ -292,7 +292,7 @@
                             </div>
                             <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ $service->name }}</h3>
                             <p class="text-gray-600 mb-6">{{ $service->description ?: 'Estamos trabajando en este increíble servicio que transformará tu experiencia.' }}</p>
-                            <span class="inline-block bg-yellow-500 text-white px-6 py-2 rounded-full font-semibold">Solícitalo</span>
+                            {{-- <span class="inline-block bg-yellow-500 text-white px-6 py-2 rounded-full font-semibold">Solícitalo</span> --}}
                         </div>
                     </div>
                 @endif

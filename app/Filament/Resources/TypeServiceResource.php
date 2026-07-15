@@ -70,7 +70,7 @@ class TypeServiceResource extends Resource
                     ->icon('heroicon-o-eye')
                     ->color('info')
                     ->modalHeading(fn ($record) => "Detalles de {$record->name}")
-                    ->modalContent(fn ($record) => view('filament.pages.service-details-modal', ['service' => $record]))
+                    ->modalContent(fn ($record) => view('filament.pages.service-details-modal', ['service' => \App\Models\TypeService::find($record->id)]))
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Cerrar'),
                 EditAction::make()->label('Editar'),
