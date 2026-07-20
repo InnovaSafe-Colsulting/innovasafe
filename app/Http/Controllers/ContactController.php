@@ -124,6 +124,14 @@ class ContactController extends Controller
                 'type_service_name' => $serviceNombres,
             ];
 
+            DB::table('notifications')->insert([
+                'module'      => 'solicitar_informacion',
+                'title'       => $request->names . ' ' . $request->last_names,
+                'description' => "Nombre: {$request->names} {$request->last_names}\nEmail: {$request->email}\nTeléfono: {$request->phone}\nServicio: {$serviceNombres}",
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ]);
+
             $destinatarios = [
                 'gerenciatecnologica@innovasafeconsulting.com',
                 'gerenciageneral@innovasafeconsulting.com',
@@ -327,6 +335,15 @@ class ContactController extends Controller
                 'cellphone'  => $request->phone,
                 'service_id' => $request->type_service,
                 'message'    => 'Solicitud de adquisición de producto: ' . implode(', ', array_column($productos, 'name')),
+            ]);
+
+            $planesDesc = implode('\n', array_map(fn($p) => "- {$p['name']} ({$p['period']}): $" . number_format($p['price'], 0, ',', '.') . ' COP', $productos));
+            DB::table('notifications')->insert([
+                'module'      => 'planes',
+                'title'       => $request->names . ' ' . $request->last_names,
+                'description' => "Nombre: {$request->names} {$request->last_names}\nEmail: {$request->email}\nTeléfono: {$request->phone}\nServicio: {$serviceNombre}\nPlanes:\n{$planesDesc}",
+                'created_at'  => now(),
+                'updated_at'  => now(),
             ]);
 
             // Enviar correos

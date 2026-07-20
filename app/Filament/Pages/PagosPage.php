@@ -9,7 +9,7 @@ class PagosPage extends Page
 {
     public static function getNavigationIcon(): string { return 'heroicon-o-credit-card'; }
     protected string $view = 'filament.pages.pagos';
-    protected static ?string $navigationLabel = 'Pagos';
+    protected static ?string $navigationLabel = 'Tipos de Pagos';
     protected static ?string $title = 'Pagos';
     protected static ?int $navigationSort = 5;
 

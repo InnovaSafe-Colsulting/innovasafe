@@ -24,6 +24,11 @@ class ResourcesManagementPage extends Page
         return 'heroicon-o-folder-open';
     }
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public $resources;
 
     public function mount()

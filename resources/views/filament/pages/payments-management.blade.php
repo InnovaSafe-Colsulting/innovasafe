@@ -155,7 +155,6 @@ table.pm-table td.pm-name { color:#f1f5f9; font-weight:500; }
                         <th>NIT</th>
                         <th>Cuenta</th>
                         <th>Celular</th>
-                        <th>Valor</th>
                         <th>Estado</th>
                         <th>Opciones</th>
                     </tr>
@@ -177,13 +176,6 @@ table.pm-table td.pm-name { color:#f1f5f9; font-weight:500; }
                             @endif
                         </td>
                         <td>{{ $p->cellphone ?: '-' }}</td>
-                        <td style="white-space:nowrap;">
-                            @if($p->value)
-                                ${{ number_format($p->value, 0, ',', '.') }}
-                            @else
-                                -
-                            @endif
-                        </td>
                         <td>
                             <span class="badge {{ $p->status == '1' ? 'badge-green' : 'badge-red' }}">
                                 {{ $p->status == '1' ? 'Activo' : 'Inactivo' }}

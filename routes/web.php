@@ -13,6 +13,7 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\TypeServiceDetailController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -74,8 +75,18 @@ Route::middleware(['auth', 'client.only'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
+
+
 // Rutas para administradores
 Route::middleware(['auth', 'admin.only'])->prefix('admin')->name('admin.')->group(function () {
+    Route::post('/type-services-detail', [TypeServiceDetailController::class, 'store'])->name('type-services-detail.store');
+    Route::post('/upload-payment-proof', function (\Illuminate\Http\Request $request) {
+        if (!$request->hasFile('payment_proof')) return response()->json(['path' => null]);
+        $file = $request->file('payment_proof');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('images/Payment Proof'), $filename);
+        return response()->json(['path' => 'images/Payment Proof/' . $filename]);
+    })->name('upload-payment-proof');
     Route::get('/gestionar-recursos', [ResourceController::class, 'index'])->name('resources.index');
     Route::get('/gestionar-recursos/crear', [ResourceController::class, 'create'])->name('resources.create');
     Route::post('/gestionar-recursos', [ResourceController::class, 'store'])->name('resources.store');

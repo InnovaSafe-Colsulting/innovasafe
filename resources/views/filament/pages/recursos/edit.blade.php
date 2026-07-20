@@ -1,4 +1,4 @@
-<x-filament-panels::layout.index>
+<x-filament-panels::page>
 <style>
     .rform-wrap { max-width:36rem; }
     .rform-card { background:#111827; border:1px solid #1e293b; border-radius:.875rem; overflow:hidden; }
@@ -49,7 +49,6 @@
             @method('PUT')
             <div class="rform-body">
 
-                {{-- Tipo (solo lectura) --}}
                 <div class="rform-group">
                     <label class="rform-label">Tipo de Recurso</label>
                     <div class="rform-readonly">
@@ -64,7 +63,6 @@
                     @endif
                 </div>
 
-                {{-- Título --}}
                 <div class="rform-group">
                     <label class="rform-label">Título <span>*</span></label>
                     <input type="text" name="title" value="{{ old('title', $resource->title) }}" required
@@ -115,7 +113,6 @@
                     </div>
                 @endif
 
-                {{-- Estado --}}
                 <div class="rform-group">
                     <label class="rform-label">Estado <span>*</span></label>
                     <select name="status" required class="rform-select">
@@ -137,4 +134,4 @@
         </form>
     </div>
 </div>
-</x-filament-panels::layout.index>
+</x-filament-panels::page>

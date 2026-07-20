@@ -1,4 +1,4 @@
-<x-filament-panels::layout.index>
+<x-filament-panels::page>
 <style>
     .rform-wrap { max-width:36rem; margin: 2rem auto; padding: 0 1rem; }
     .rform-card { background:#111827; border:1px solid #1e293b; border-radius:.875rem; overflow:hidden; }
@@ -124,4 +124,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (val) toggleFields(val);
 });
 </script>
-</x-filament-panels::layout.index>
+</x-filament-panels::page>

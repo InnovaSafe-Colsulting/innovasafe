@@ -14,6 +14,7 @@ class PaymentsManagementPage extends Page
     public function getTitle(): string { return 'Tipos de Pago'; }
     public static function getNavigationLabel(): string { return 'Tipos de Pago'; }
     public static function getNavigationIcon(): string { return 'heroicon-o-credit-card'; }
+    public static function shouldRegisterNavigation(): bool { return false; }
 
     public $payments = [];
 
