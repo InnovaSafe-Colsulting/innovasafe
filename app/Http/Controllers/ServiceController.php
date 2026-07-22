@@ -18,6 +18,7 @@ class ServiceController extends Controller
     public function index()
     {
         $services = DB::table('type_services')
+            ->orderBy('status', 'asc')
             ->orderBy('name')
             ->get();
 

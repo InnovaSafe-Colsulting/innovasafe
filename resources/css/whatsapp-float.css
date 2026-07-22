@@ -25,11 +25,14 @@
 }
 
 .whatsapp-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
     border: none;
     border-radius: 50%;
-    background: linear-gradient(145deg, #25D366 0%, #128C7E 50%, #075E54 100%);
+    background: linear-gradient(145deg, #25D366 0%, #128C7E 50%, #075E54 100%) !important;
     box-shadow: 
         0 8px 25px rgba(37, 211, 102, 0.4),
         0 4px 12px rgba(0, 0, 0, 0.15),

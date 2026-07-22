@@ -24,7 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $typeServices = \App\Models\TypeService::all();
+        $typeServices = \App\Models\TypeService::orderBy('status', 'asc')->get();
         return view('home', compact('typeServices'));
     }
 }
