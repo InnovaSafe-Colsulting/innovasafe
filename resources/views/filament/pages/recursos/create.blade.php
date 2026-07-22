@@ -67,7 +67,7 @@
                         @error('description')<p class="rform-err">{{ $message }}</p>@enderror
                     </div>
                     <div class="rform-group">
-                        <label class="rform-label">Enlace <span>*</span></label>
+                        <label class="rform-label">Enlace <em>(opcional)</em></label>
                         <input type="url" name="url_link" value="{{ old('url_link') }}" placeholder="https://..." class="rform-input">
                         @error('url_link')<p class="rform-err">{{ $message }}</p>@enderror
                     </div>
