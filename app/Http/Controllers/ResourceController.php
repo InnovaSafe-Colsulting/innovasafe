@@ -80,7 +80,7 @@ class ResourceController extends Controller
                 DB::table('blog_resource_details')->insert([
                     'title'            => $validated['title'],
                     'description'      => $validated['description'],
-                    'url_link'         => $validated['url_link'],
+                    'url_link'         => $validated['url_link'] ?? null,
                     'image'            => $imagePath,
                     'resource_type_id' => $blogTypeId,
                     'status'           => $validated['status'],

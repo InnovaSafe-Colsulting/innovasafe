@@ -20,7 +20,7 @@ class StoreResourceRequest extends FormRequest
 
         if ($isBlog) {
             $rules['description'] = 'required|string|max:1000';
-            $rules['url_link']    = 'required|url|max:500';
+            $rules['url_link']    = 'nullable|url|max:500';
             $rules['image']       = 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048';
         } else {
             $rules['type_resource_id'] = 'required|exists:resources_types,id';
@@ -39,7 +39,6 @@ class StoreResourceRequest extends FormRequest
             'title.max'                 => 'El título no puede exceder 255 caracteres.',
             'description.required'      => 'La descripción es obligatoria para blogs.',
             'description.max'           => 'La descripción no puede exceder 1000 caracteres.',
-            'url_link.required'         => 'El enlace es obligatorio para blogs.',
             'url_link.url'              => 'El enlace debe ser una URL válida.',
             'path.required'             => 'El archivo es obligatorio.',
             'path.file'                 => 'Debe seleccionar un archivo válido.',
