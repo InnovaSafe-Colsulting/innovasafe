@@ -38,7 +38,7 @@
                         Blog
                     </span>
                 </label>
-                @foreach($resourceTypes as $type)
+                @foreach($resourceTypes->where('resource', '!=', 'Blog') as $type)
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="radio" name="filter_type" value="{{ $type->id }}" class="text-blue-600" onchange="filterTable(this.value)">
                         <span class="text-sm font-medium text-gray-700 flex items-center gap-1">
