@@ -15,7 +15,6 @@ class ResourceController extends Controller
     {
         $user = auth()->user();
         $isClient = $user && $user->role_id != 1;
-        $limit = $isClient ? null : 3;
 
         $blogsQ        = DB::table('blog_resource_details')->where('status', 1)->orderBy('created_at', 'desc');
         $guiasQ        = DB::table('documents_resources_details')->where('resource_type_id', 1)->where('status', 1)->orderBy('created_at', 'desc');
@@ -25,9 +24,9 @@ class ResourceController extends Controller
         $guiasTotal        = $guiasQ->count();
         $descargablesTotal = $descargablesQ->count();
 
-        $blogs        = $limit ? $blogsQ->limit($limit)->get() : $blogsQ->get();
-        $guias        = $limit ? $guiasQ->limit($limit)->get() : $guiasQ->get();
-        $descargables = $limit ? $descargablesQ->limit($limit)->get() : $descargablesQ->get();
+        $blogs        = $blogsQ->get();
+        $guias        = $guiasQ->get();
+        $descargables = $descargablesQ->get();
 
         return view('resources', compact('blogs', 'guias', 'descargables', 'isClient', 'blogsTotal', 'guiasTotal', 'descargablesTotal'));
     }

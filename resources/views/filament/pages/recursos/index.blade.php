@@ -55,13 +55,10 @@
 
 {{-- Filtros --}}
 <div class="rec-filters">
-    <label>
-        <input type="radio" name="rec_filter" value="blog" checked onchange="recFilter('blog')">
-        Blog
-    </label>
     @foreach($resourceTypes as $type)
+        @php $val = strtolower($type->resource) === 'blog' ? 'blog' : $type->id; @endphp
         <label>
-            <input type="radio" name="rec_filter" value="{{ $type->id }}" onchange="recFilter('{{ $type->id }}')">
+            <input type="radio" name="rec_filter" value="{{ $val }}" {{ $loop->first ? 'checked' : '' }} onchange="recFilter('{{ $val }}')">
             {{ $type->resource }}
         </label>
     @endforeach
