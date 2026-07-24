@@ -46,9 +46,9 @@
                     <label class="rform-label">Tipo de Recurso <span>*</span></label>
                     <select name="type_resource_id" id="type_resource_id" required onchange="toggleFields(this.value)" class="rform-select">
                         <option value="">Seleccionar tipo</option>
-                        <option value="blog" {{ old('type_resource_id') == 'blog' ? 'selected' : '' }}>Blog</option>
                         @foreach($resourceTypes as $type)
-                            <option value="{{ $type->id }}" {{ old('type_resource_id') == $type->id ? 'selected' : '' }}>{{ $type->resource }}</option>
+                            @php $val = strtolower($type->resource) === 'blog' ? 'blog' : $type->id; @endphp
+                            <option value="{{ $val }}" {{ old('type_resource_id') == $val ? 'selected' : '' }}>{{ $type->resource }}</option>
                         @endforeach
                     </select>
                     @error('type_resource_id')<p class="rform-err">{{ $message }}</p>@enderror

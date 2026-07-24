@@ -31,19 +31,14 @@
         {{-- Filtro por tipo --}}
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 px-6 py-4">
             <div class="flex flex-wrap gap-6">
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="filter_type" value="blog" class="text-blue-600" checked onchange="filterTable(this.value)">
-                    <span class="text-sm font-medium text-gray-700 flex items-center gap-1">
-                        <svg class="w-4 h-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 13h6M9 17h4"/></svg>
-                        Blog
-                    </span>
-                </label>
-                @foreach($resourceTypes->where('resource', '!=', 'Blog') as $type)
+                @foreach($resourceTypes as $type)
                     <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="filter_type" value="{{ $type->id }}" class="text-blue-600" onchange="filterTable(this.value)">
+                        <input type="radio" name="filter_type" value="{{ strtolower($type->resource) === 'blog' ? 'blog' : $type->id }}" class="text-blue-600" {{ $loop->first ? 'checked' : '' }} onchange="filterTable(this.value)">
                         <span class="text-sm font-medium text-gray-700 flex items-center gap-1">
                             @if($type->id == 2)
                                 <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                            @elseif(strtolower($type->resource) === 'blog')
+                                <svg class="w-4 h-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 13h6M9 17h4"/></svg>
                             @else
                                 <svg class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                             @endif
@@ -54,138 +49,136 @@
             </div>
         </div>
 
-        {{-- Tabla Blog --}}
-        <div id="table-blog" class="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div class="px-6 py-3 border-b border-gray-100">
-                <h2 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Blog</h2>
-            </div>
-            @if($blogs->count() > 0)
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Imagen</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Título</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descripción</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Enlace</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Creado</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($blogs as $blog)
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3">
-                                        @if($blog->image)
-                                            <img src="{{ asset('storage/' . $blog->image) }}" alt="" class="h-12 w-12 rounded-lg object-cover">
-                                        @else
-                                            <div class="h-12 w-12 rounded-lg bg-purple-50 flex items-center justify-center">
-                                                <svg class="w-5 h-5 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                            </div>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ $blog->title }}</td>
-                                    <td class="px-4 py-3 text-sm text-gray-500 max-w-xs">{{ Str::limit($blog->description, 60) }}</td>
-                                    <td class="px-4 py-3 text-sm">
-                                        @if($blog->url_link)
-                                            <a href="{{ $blog->url_link }}" target="_blank" class="text-blue-600 hover:underline">{{ Str::limit($blog->url_link, 30) }}</a>
-                                        @else
-                                            <span class="text-gray-400">-</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">{{ $blog->created_at }}</td>
-                                    <td class="px-4 py-3">
-                                        <label class="relative inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" class="sr-only peer" {{ $blog->status ? 'checked' : '' }}
-                                                onchange="toggleStatus({{ $blog->id }}, 'blog', this.checked ? 1 : 0)">
-                                            <div class="w-10 h-5 bg-gray-300 peer-checked:bg-green-500 rounded-full transition peer-focus:ring-2 peer-focus:ring-green-300 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition peer-checked:after:translate-x-5"></div>
-                                        </label>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-2">
-                                            <a href="{{ route('admin.resources.edit', [$blog->id, 'blog']) }}" class="text-blue-600 hover:text-blue-800" title="Editar">
-                                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                            </a>
-                                            <button onclick="confirmDelete({{ $blog->id }}, 'blog', '{{ addslashes($blog->title) }}')" class="text-red-500 hover:text-red-700" title="Eliminar">
-                                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <div class="text-center py-12 text-gray-400">
-                    <svg class="mx-auto w-10 h-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2z"/></svg>
-                    <p class="text-sm">No hay blogs creados.</p>
-                </div>
-            @endif
-        </div>
-
-        {{-- Tablas por tipo de documento --}}
+        {{-- Tablas --}}
         @foreach($resourceTypes as $type)
-            <div id="table-{{ $type->id }}" class="hidden bg-white rounded-lg shadow-sm border border-gray-200">
+            @php $isBlog = strtolower($type->resource) === 'blog'; @endphp
+            <div id="table-{{ $isBlog ? 'blog' : $type->id }}" class="{{ $loop->first ? '' : 'hidden' }} bg-white rounded-lg shadow-sm border border-gray-200">
                 <div class="px-6 py-3 border-b border-gray-100">
                     <h2 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">{{ $type->resource }}</h2>
                 </div>
-                @php $filtered = $documents->where('resource_type_id', $type->id); @endphp
-                @if($filtered->count() > 0)
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Título</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Archivo</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Creado</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($filtered as $doc)
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ $doc->title }}</td>
-                                        <td class="px-4 py-3 text-sm">
-                                            @if($doc->path)
-                                                <a href="{{ asset('storage/' . $doc->path) }}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800">
-                                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                                    Descargar
-                                                </a>
-                                            @else
-                                                <span class="text-gray-400">-</span>
-                                            @endif
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">{{ $doc->created_at }}</td>
-                                        <td class="px-4 py-3">
-                                            <label class="relative inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" class="sr-only peer" {{ $doc->status ? 'checked' : '' }}
-                                                    onchange="toggleStatus({{ $doc->id }}, 'document', this.checked ? 1 : 0)">
-                                                <div class="w-10 h-5 bg-gray-300 peer-checked:bg-green-500 rounded-full transition peer-focus:ring-2 peer-focus:ring-green-300 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition peer-checked:after:translate-x-5"></div>
-                                            </label>
-                                        </td>
-                                        <td class="px-4 py-3">
-                                            <div class="flex items-center gap-2">
-                                                <a href="{{ route('admin.resources.edit', [$doc->id, 'document']) }}" class="text-blue-600 hover:text-blue-800" title="Editar">
-                                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                                </a>
-                                                <button onclick="confirmDelete({{ $doc->id }}, 'document', '{{ addslashes($doc->title) }}')" class="text-red-500 hover:text-red-700" title="Eliminar">
-                                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                                </button>
-                                            </div>
-                                        </td>
+
+                @if($isBlog)
+                    @if($blogs->count() > 0)
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Imagen</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Título</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descripción</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Enlace</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Creado</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Opciones</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach($blogs as $blog)
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3">
+                                                @if($blog->image)
+                                                    <img src="{{ asset('storage/' . $blog->image) }}" alt="" class="h-12 w-12 rounded-lg object-cover">
+                                                @else
+                                                    <div class="h-12 w-12 rounded-lg bg-purple-50 flex items-center justify-center">
+                                                        <svg class="w-5 h-5 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                                    </div>
+                                                @endif
+                                            </td>
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ $blog->title }}</td>
+                                            <td class="px-4 py-3 text-sm text-gray-500 max-w-xs">{{ Str::limit($blog->description, 60) }}</td>
+                                            <td class="px-4 py-3 text-sm">
+                                                @if($blog->url_link)
+                                                    <a href="{{ $blog->url_link }}" target="_blank" class="text-blue-600 hover:underline">{{ Str::limit($blog->url_link, 30) }}</a>
+                                                @else
+                                                    <span class="text-gray-400">-</span>
+                                                @endif
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">{{ $blog->created_at }}</td>
+                                            <td class="px-4 py-3">
+                                                <label class="relative inline-flex items-center cursor-pointer">
+                                                    <input type="checkbox" class="sr-only peer" {{ $blog->status ? 'checked' : '' }}
+                                                        onchange="toggleStatus({{ $blog->id }}, 'blog', this.checked ? 1 : 0)">
+                                                    <div class="w-10 h-5 bg-gray-300 peer-checked:bg-green-500 rounded-full transition peer-focus:ring-2 peer-focus:ring-green-300 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition peer-checked:after:translate-x-5"></div>
+                                                </label>
+                                            </td>
+                                            <td class="px-4 py-3">
+                                                <div class="flex items-center gap-2">
+                                                    <a href="{{ route('admin.resources.edit', [$blog->id, 'blog']) }}" class="text-blue-600 hover:text-blue-800" title="Editar">
+                                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                                    </a>
+                                                    <button onclick="confirmDelete({{ $blog->id }}, 'blog', '{{ addslashes($blog->title) }}')" class="text-red-500 hover:text-red-700" title="Eliminar">
+                                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="text-center py-12 text-gray-400">
+                            <svg class="mx-auto w-10 h-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2z"/></svg>
+                            <p class="text-sm">No hay blogs creados.</p>
+                        </div>
+                    @endif
                 @else
-                    <div class="text-center py-12 text-gray-400">
-                        <svg class="mx-auto w-10 h-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        <p class="text-sm">No hay {{ strtolower($type->resource) }} creados.</p>
-                    </div>
+                    @php $filtered = $documents->where('resource_type_id', $type->id); @endphp
+                    @if($filtered->count() > 0)
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Título</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Archivo</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Creado</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach($filtered as $doc)
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ $doc->title }}</td>
+                                            <td class="px-4 py-3 text-sm">
+                                                @if($doc->path)
+                                                    <a href="{{ asset('storage/' . $doc->path) }}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                                        Descargar
+                                                    </a>
+                                                @else
+                                                    <span class="text-gray-400">-</span>
+                                                @endif
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">{{ $doc->created_at }}</td>
+                                            <td class="px-4 py-3">
+                                                <label class="relative inline-flex items-center cursor-pointer">
+                                                    <input type="checkbox" class="sr-only peer" {{ $doc->status ? 'checked' : '' }}
+                                                        onchange="toggleStatus({{ $doc->id }}, 'document', this.checked ? 1 : 0)">
+                                                    <div class="w-10 h-5 bg-gray-300 peer-checked:bg-green-500 rounded-full transition peer-focus:ring-2 peer-focus:ring-green-300 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition peer-checked:after:translate-x-5"></div>
+                                                </label>
+                                            </td>
+                                            <td class="px-4 py-3">
+                                                <div class="flex items-center gap-2">
+                                                    <a href="{{ route('admin.resources.edit', [$doc->id, 'document']) }}" class="text-blue-600 hover:text-blue-800" title="Editar">
+                                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                                    </a>
+                                                    <button onclick="confirmDelete({{ $doc->id }}, 'document', '{{ addslashes($doc->title) }}')" class="text-red-500 hover:text-red-700" title="Eliminar">
+                                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="text-center py-12 text-gray-400">
+                            <svg class="mx-auto w-10 h-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <p class="text-sm">No hay {{ strtolower($type->resource) }} creados.</p>
+                        </div>
+                    @endif
                 @endif
             </div>
         @endforeach
@@ -220,16 +213,11 @@
 let deleteTarget = null;
 
 function filterTable(value) {
-    document.getElementById('table-blog').classList.add('hidden');
     @foreach($resourceTypes as $type)
-        document.getElementById('table-{{ $type->id }}').classList.add('hidden');
+        @php $tid = strtolower($type->resource) === 'blog' ? 'blog' : $type->id; @endphp
+        document.getElementById('table-{{ $tid }}').classList.add('hidden');
     @endforeach
-
-    if (value === 'blog') {
-        document.getElementById('table-blog').classList.remove('hidden');
-    } else {
-        document.getElementById('table-' + value).classList.remove('hidden');
-    }
+    document.getElementById('table-' + value).classList.remove('hidden');
 }
 
 function toggleStatus(id, type, status) {

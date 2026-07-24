@@ -204,6 +204,7 @@
                     <a href="{{ route('resources') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Recursos</a>
                     <a href="{{ route('plans') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Planes</a>
                     <a href="{{ route('contact') }}" class="nav-link text-sm text-gray-300 hover:text-green-400 transition">Contacto</a>
+                    @if(false) {{-- cart: hidden until client login is enabled --}}
                     @auth
                         <div class="relative group">
                             <button class="nav-link p-2 hover:bg-white/10 rounded-lg transition relative cart-button">
@@ -313,6 +314,7 @@
                             </div>
                         </div>
                     @endauth
+                    @endif
                 </div>
 
                 {{-- Right Actions --}}
@@ -322,6 +324,7 @@
                             Solicitar Asesoría <span>&rarr;</span>
                         </a>
                     @endguest
+                    @if(false) {{-- user-menu: hidden until client login is enabled --}}
                     @auth
                         <div class="relative group">
                             <button class="nav-link text-sm text-gray-300 hover:text-green-400 transition flex items-center gap-1">
@@ -339,6 +342,7 @@
                             </div>
                         </div>
                     @endauth
+                    @endif
                 </div>
 
                 {{-- Mobile Menu Button --}}
@@ -363,12 +367,14 @@
                     <a href="#" class="btn-asesoria text-sm text-center text-white bg-blue-600 px-4 py-2 rounded-lg">Solicitar Asesoría &rarr;</a>
                 </div>
             @endguest
+            @if(false) {{-- mobile-logout: hidden until client login is enabled --}}
             @auth
                 <form method="POST" action="{{ route('logout') }}" class="mt-3 pt-3 border-t border-white/10">
                     @csrf
                     <button type="submit" class="w-full text-sm text-white bg-red-600 px-4 py-2 rounded-lg">Cerrar sesión</button>
                 </form>
             @endauth
+            @endif
         </div>
     </nav>
 
