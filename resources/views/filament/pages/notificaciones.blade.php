@@ -96,7 +96,7 @@
 {{-- Modal --}}
 @if($showModal)
 <div class="notif-overlay" wire:click.self="closeModal">
-    <div class="notif-modal">
+    <div class="notif-modal" wire:click.stop>
         <div class="notif-modal-hd">
             <h3>
                 {{ $activeModule === 'planes' ? 'Planes' : 'Solicitar Información' }}
@@ -130,7 +130,7 @@
                     </div>
                     @if($expandedId === $n->id)
                     <div class="notif-detail">
-                        {{ $n->description }}
+                        {!! nl2br(e($n->description)) !!}
                         <div class="notif-detail-footer">
                             <button class="notif-btn-accept" wire:click="markAsRead({{ $n->id }})">Aceptar</button>
                         </div>

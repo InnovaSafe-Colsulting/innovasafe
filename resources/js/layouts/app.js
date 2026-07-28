@@ -572,6 +572,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             grecaptcha.ready(function () {
                 grecaptcha.execute(siteKey, { action: 'advisory' }).then(function (token) {
+                    const submitBtn = formAsesoria.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Enviando...';
+                        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+
                     const formData = new FormData(formAsesoria);
                     formData.append('recaptcha_token', token);
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -595,6 +602,11 @@ document.addEventListener('DOMContentLoaded', function () {
                             showToast(result.data.message, 'success');
                             formAsesoria.reset();
                         } else if (result.status === 422) {
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                                submitBtn.textContent = 'Enviar';
+                                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                            }
                             const errors = result.data.errors;
                             Object.keys(errors).forEach(function (field) {
                                 const span = document.querySelector('[data-error="' + field + '"]');
@@ -604,10 +616,20 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             });
                         } else {
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                                submitBtn.textContent = 'Enviar';
+                                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                            }
                             showToast(result.data.message || 'Ocurrió un error. Intenta nuevamente.', 'danger');
                         }
                     })
                     .catch(function () {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Enviar';
+                            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        }
                         showToast('No se pudo conectar con el servidor. Intenta nuevamente.', 'danger');
                     });
                 });
