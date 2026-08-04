@@ -27,6 +27,24 @@
 }
 .aff-card-header h2 { font-size:.95rem; font-weight:600; color:#f1f5f9; margin:0; }
 
+/* ── Create modal ── */
+.aff-modal-overlay { position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.65); display:flex; align-items:center; justify-content:center; padding:1rem; }
+.aff-modal { background:#111827; border:1px solid #1e293b; border-radius:.875rem; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; padding:1.5rem; }
+.aff-modal h3 { font-size:1rem; font-weight:600; color:#f1f5f9; margin:0 0 1.25rem; }
+.aff-form-group { margin-bottom:1rem; }
+.aff-form-group label { display:block; font-size:.78rem; font-weight:500; color:#94a3b8; margin-bottom:.35rem; }
+.aff-form-group input, .aff-form-group select { width:100%; padding:.55rem .75rem; background:#0d1117; border:1px solid #1e293b; border-radius:.5rem; color:#f1f5f9; font-size:.82rem; outline:none; }
+.aff-form-group input:focus, .aff-form-group select:focus { border-color:#3b82f6; }
+.aff-form-group input[readonly] { color:#475569; cursor:not-allowed; }
+.aff-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+.aff-modal-footer { display:flex; justify-content:flex-end; gap:.75rem; margin-top:1.25rem; }
+.btn-cancel { padding:.45rem 1rem; background:#1e293b; color:#94a3b8; border:none; border-radius:.5rem; font-size:.82rem; cursor:pointer; }
+.btn-cancel:hover { background:#334155; }
+.btn-save { padding:.45rem 1rem; background:#1d4ed8; color:#fff; border:none; border-radius:.5rem; font-size:.82rem; font-weight:600; cursor:pointer; }
+.btn-save:hover { background:#1e40af; }
+.btn-new { display:inline-flex; align-items:center; gap:.4rem; padding:.45rem 1rem; background:#1d4ed8; color:#fff; border:none; border-radius:.5rem; font-size:.8rem; font-weight:600; cursor:pointer; }
+.btn-new:hover { background:#1e40af; }
+
 /* ── Table ── */
 .aff-table-wrap { overflow-x:auto; }
 table.aff-table { width:100%; border-collapse:collapse; font-size:.82rem; }
@@ -189,6 +207,10 @@ table.aff-table td.name { color:#f1f5f9; font-weight:500; }
     <div class="aff-card">
         <div class="aff-card-header">
             <h2>Listado de Afiliaciones</h2>
+            <button class="btn-new" wire:click="openCreateModal">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                Nueva Afiliación
+            </button>
         </div>
 
         @if($affiliations->isEmpty())
@@ -419,4 +441,90 @@ table.aff-table td.name { color:#f1f5f9; font-weight:500; }
         @endif
     </div>
 </div>
+
+{{-- Modal Nueva Afiliación --}}
+@if($showCreateModal)
+<div class="aff-modal-overlay" wire:click.self="closeCreateModal">
+    <div class="aff-modal">
+        <h3>Nueva Afiliación</h3>
+
+        <div class="aff-form-group">
+            <label>Contacto</label>
+            <select wire:model="form_contact_id" wire:change="loadContactInfo">
+                <option value="">-- Selecciona un contacto --</option>
+                @foreach($contacts as $c)
+                    <option value="{{ $c->id }}">{{ $c->names }} {{ $c->last_names }} — {{ $c->email }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        @if($form_contact_name)
+        <div class="aff-form-grid">
+            <div class="aff-form-group">
+                <label>Nombre</label>
+                <input type="text" value="{{ $form_contact_name }}" readonly>
+            </div>
+            <div class="aff-form-group">
+                <label>Teléfono</label>
+                <input type="text" value="{{ $form_contact_phone }}" readonly>
+            </div>
+        </div>
+        <div class="aff-form-group">
+            <label>Email</label>
+            <input type="text" value="{{ $form_contact_email }}" readonly>
+        </div>
+        @endif
+
+        <div class="aff-form-group">
+            <label>Plan</label>
+            <select wire:model="form_plan_id">
+                <option value="">-- Selecciona un plan --</option>
+                @foreach($plans as $plan)
+                    <option value="{{ $plan->id }}">{{ $plan->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="aff-form-grid">
+            <div class="aff-form-group">
+                <label>Período de facturación</label>
+                <select wire:model="form_billing_period">
+                    <option value="">-- Selecciona --</option>
+                    <option value="monthly">Mensual</option>
+                    <option value="yearly">Anual</option>
+                </select>
+            </div>
+            <div class="aff-form-group">
+                <label>Estado de pago</label>
+                <select wire:model="form_payment_status_id">
+                    <option value="">-- Selecciona --</option>
+                    @foreach($paymentStatuses as $ps)
+                        <option value="{{ $ps->id }}">{{ $ps->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="aff-form-grid">
+            <div class="aff-form-group">
+                <label>Fecha de pago</label>
+                <input type="date" wire:model="form_payment_date">
+            </div>
+            <div class="aff-form-group">
+                <label>Fecha de vencimiento</label>
+                <input type="date" wire:model="form_expires_at">
+            </div>
+        </div>
+
+        <div class="aff-modal-footer">
+            <button class="btn-cancel" wire:click="closeCreateModal">Cancelar</button>
+            <button class="btn-save" wire:click="createAffiliation" wire:loading.attr="disabled" wire:target="createAffiliation">
+                <span wire:loading.remove wire:target="createAffiliation">Guardar</span>
+                <span wire:loading wire:target="createAffiliation">Procesando...</span>
+            </button>
+        </div>
+    </div>
+</div>
+@endif
+
 </x-filament-panels::page>

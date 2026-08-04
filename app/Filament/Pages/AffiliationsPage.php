@@ -15,12 +15,28 @@ class AffiliationsPage extends Page
 
     public $affiliations;
     public $paymentStatuses;
+    public $plans;
+    public $contacts;
     public $expandedRow = null;
     public $modules = [];
+
+    // Modal nueva afiliación
+    public bool $showCreateModal = false;
+    public $form_contact_id = '';
+    public $form_contact_name = '';
+    public $form_contact_email = '';
+    public $form_contact_phone = '';
+    public $form_plan_id = '';
+    public $form_billing_period = '';
+    public $form_payment_date = '';
+    public $form_expires_at = '';
+    public $form_payment_status_id = '';
 
     public function mount(): void
     {
         $this->paymentStatuses = DB::table('payment_status')->get();
+        $this->plans = DB::table('plans')->where('status', 1)->get();
+        $this->contacts = DB::table('contacts')->where('converted', 0)->orderBy('names')->get();
         $this->loadAffiliations();
     }
 
@@ -56,6 +72,97 @@ class AffiliationsPage extends Page
             )
             ->orderBy('us.created_at', 'desc')
             ->get();
+    }
+
+    public function openCreateModal(): void
+    {
+        $this->form_contact_id = '';
+        $this->form_contact_name = '';
+        $this->form_contact_email = '';
+        $this->form_contact_phone = '';
+        $this->form_plan_id = '';
+        $this->form_billing_period = '';
+        $this->form_payment_date = '';
+        $this->form_expires_at = '';
+        $this->form_payment_status_id = '';
+        $this->showCreateModal = true;
+    }
+
+    public function closeCreateModal(): void
+    {
+        $this->showCreateModal = false;
+    }
+
+    public function loadContactInfo(): void
+    {
+        if (!$this->form_contact_id) {
+            $this->form_contact_name = '';
+            $this->form_contact_email = '';
+            $this->form_contact_phone = '';
+            return;
+        }
+        $contact = DB::table('contacts')->where('id', $this->form_contact_id)->first();
+        if ($contact) {
+            $this->form_contact_name  = $contact->names . ' ' . $contact->last_names;
+            $this->form_contact_email = $contact->email;
+            $this->form_contact_phone = $contact->cellphone;
+        }
+    }
+
+    public function createAffiliation(): void
+    {
+        if (!$this->form_contact_id || !$this->form_plan_id || !$this->form_billing_period || !$this->form_payment_status_id) {
+            return;
+        }
+
+        $statusId = (int) $this->form_payment_status_id;
+
+        DB::table('user_services')->insert([
+            'contact_id'        => $this->form_contact_id,
+            'plan_id'           => $this->form_plan_id,
+            'billing_period'    => $this->form_billing_period,
+            'payment_date'      => $this->form_payment_date ?: null,
+            'expires_at'        => $this->form_expires_at ?: null,
+            'payment_status_id' => $statusId,
+            'status'            => $statusId === 1 ? 'active' : 'canceled',
+            'created_at'        => now(),
+            'updated_at'        => now(),
+        ]);
+
+        if ($statusId === 1) {
+            $this->convertContact((int) $this->form_contact_id);
+        }
+
+        $this->contacts = DB::table('contacts')->where('converted', 0)->orderBy('names')->get();
+        $this->closeCreateModal();
+        $this->loadAffiliations();
+    }
+
+    private function convertContact(int $contactId): void
+    {
+        $contact = DB::table('contacts')->where('id', $contactId)->first();
+        if (!$contact) return;
+
+        $user = DB::table('users')->where('email', $contact->email)->first();
+        if ($user) {
+            DB::table('users')->where('id', $user->id)->update(['status' => '1', 'active' => 1, 'updated_at' => now()]);
+        } else {
+            DB::table('users')->insert([
+                'names'      => $contact->names,
+                'last_names' => $contact->last_names,
+                'email'      => $contact->email,
+                'cellphone'  => $contact->cellphone,
+                'password'   => bcrypt($contact->names . $contact->cellphone),
+                'city_id'    => 1,
+                'role_id'    => 3,
+                'status'     => '1',
+                'active'     => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        DB::table('contacts')->where('id', $contactId)->update(['converted' => 1]);
     }
 
     public function toggleExpand(int $id): void
@@ -103,27 +210,11 @@ class AffiliationsPage extends Page
             return;
         }
 
-        $user = DB::table('users')->where('email', $contact->email)->first();
-
         if ($statusId === 1) {
-            if ($user) {
-                DB::table('users')->where('id', $user->id)->update(['status' => '1', 'updated_at' => now()]);
-            } else {
-                DB::table('users')->insert([
-                    'names'      => $contact->names,
-                    'last_names' => $contact->last_names,
-                    'email'      => $contact->email,
-                    'cellphone'  => $contact->cellphone,
-                    'password'   => bcrypt($contact->names . $contact->cellphone),
-                    'city_id'    => 1,
-                    'role_id'    => 3,
-                    'status'     => 1,
-                    'active'     => 1,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-        } elseif (in_array($statusId, [2, 3])) {
+            $this->convertContact($contact->id);
+            $this->contacts = DB::table('contacts')->where('converted', 0)->orderBy('names')->get();
+        } else {
+            $user = DB::table('users')->where('email', $contact->email)->first();
             if ($user) {
                 DB::table('users')->where('id', $user->id)->update(['status' => '0', 'updated_at' => now()]);
             }
