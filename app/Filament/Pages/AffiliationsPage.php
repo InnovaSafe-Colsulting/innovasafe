@@ -27,25 +27,25 @@ class AffiliationsPage extends Page
     public function loadAffiliations(): void
     {
         $this->affiliations = DB::table('user_services as us')
-            ->join('users as u', 'us.user_id', '=', 'u.id')
+            ->join('contacts as c', 'us.contact_id', '=', 'c.id')
             ->join('plans as p', 'us.plan_id', '=', 'p.id')
             ->leftJoin('orders as o', 'us.order_id', '=', 'o.id')
             ->leftJoin('payment_status as ps', 'us.payment_status_id', '=', 'ps.id')
             ->select(
                 'us.id',
-                'us.user_id',
+                'us.contact_id',
                 'us.plan_id',
                 'us.order_id',
                 'us.payment_date',
-                'us.payment_type',
+                'us.payment_type_id',
                 'us.billing_period',
                 'us.expires_at',
                 'us.status',
                 'us.payment_status_id',
                 'us.created_at',
-                DB::raw("CONCAT(u.names, ' ', u.last_names) as user_name"),
-                'u.email',
-                'u.cellphone',
+                DB::raw("CONCAT(c.names, ' ', c.last_names) as user_name"),
+                'c.email',
+                'c.cellphone',
                 'p.name as plan_name',
                 'p.prize as plan_price',
                 'o.order_number',
@@ -82,7 +82,7 @@ class AffiliationsPage extends Page
     public function toggleStatus(int $id): void
     {
         $current = DB::table('user_services')->where('id', $id)->value('status');
-        $new = $current == '1' ? '0' : '1';
+        $new = $current === 'active' ? 'canceled' : 'active';
         DB::table('user_services')->where('id', $id)->update(['status' => $new, 'updated_at' => now()]);
         $this->loadAffiliations();
     }
@@ -91,8 +91,44 @@ class AffiliationsPage extends Page
     {
         DB::table('user_services')->where('id', $id)->update([
             'payment_status_id' => $statusId,
-            'updated_at' => now(),
+            'status'            => $statusId === 1 ? 'active' : 'canceled',
+            'updated_at'        => now(),
         ]);
+
+        $service = DB::table('user_services')->where('id', $id)->first();
+        $contact = DB::table('contacts')->where('id', $service->contact_id)->first();
+
+        if (!$contact) {
+            $this->loadAffiliations();
+            return;
+        }
+
+        $user = DB::table('users')->where('email', $contact->email)->first();
+
+        if ($statusId === 1) {
+            if ($user) {
+                DB::table('users')->where('id', $user->id)->update(['status' => '1', 'updated_at' => now()]);
+            } else {
+                DB::table('users')->insert([
+                    'names'      => $contact->names,
+                    'last_names' => $contact->last_names,
+                    'email'      => $contact->email,
+                    'cellphone'  => $contact->cellphone,
+                    'password'   => bcrypt($contact->names . $contact->cellphone),
+                    'city_id'    => 1,
+                    'role_id'    => 3,
+                    'status'     => 1,
+                    'active'     => 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        } elseif (in_array($statusId, [2, 3])) {
+            if ($user) {
+                DB::table('users')->where('id', $user->id)->update(['status' => '0', 'updated_at' => now()]);
+            }
+        }
+
         $this->loadAffiliations();
     }
 }

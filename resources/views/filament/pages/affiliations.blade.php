@@ -156,7 +156,7 @@ table.aff-table td.name { color:#f1f5f9; font-weight:500; }
     {{-- Stats ── ──────────────────────────────────────────── --}}
     @php
         $total   = count($affiliations);
-        $activos = collect($affiliations)->where('status', '1')->count();
+        $activos = collect($affiliations)->where('status', 'active')->count();
         $exitoso = collect($affiliations)->where('payment_status_name', 'Pago Exitoso')->count();
         $pendiente = collect($affiliations)->where('payment_status_name', 'Pago Pendiente')->count();
         $moroso  = collect($affiliations)->where('payment_status_name', 'Moroso')->count();
@@ -286,9 +286,9 @@ table.aff-table td.name { color:#f1f5f9; font-weight:500; }
                             </div>
                         </td>
                         <td>
-                            <button class="status-btn {{ $aff->status == '1' ? 'status-on' : 'status-off' }}"
+                            <button class="status-btn {{ $aff->status === 'active' ? 'status-on' : 'status-off' }}"
                                 wire:click="toggleStatus({{ $aff->id }})">
-                                {{ $aff->status == '1' ? 'Activo' : 'Inactivo' }}
+                                {{ $aff->status === 'active' ? 'Activo' : 'Inactivo' }}
                             </button>
                         </td>
                         <td>
@@ -380,9 +380,9 @@ table.aff-table td.name { color:#f1f5f9; font-weight:500; }
                 </div>
 
                 <div class="mc-actions">
-                    <button class="status-btn {{ $aff->status == '1' ? 'status-on' : 'status-off' }}"
+                    <button class="status-btn {{ $aff->status === 'active' ? 'status-on' : 'status-off' }}"
                         wire:click="toggleStatus({{ $aff->id }})">
-                        {{ $aff->status == '1' ? 'Activo' : 'Inactivo' }}
+                        {{ $aff->status === 'active' ? 'Activo' : 'Inactivo' }}
                     </button>
                     <button class="expand-btn {{ $expandedRow === $aff->id ? 'open' : '' }}"
                         wire:click="toggleExpand({{ $aff->id }})" style="padding:.3rem .75rem;border-radius:.4rem;background:#1e293b;color:#94a3b8;font-size:.75rem;display:inline-flex;align-items:center;gap:.3rem;">

@@ -36,4 +36,6 @@ return [
         'secret_key' => env('RECAPTCHA_SECRET_KEY'),
     ],
 
+    'api_service_token' => env('API_SERVICE_TOKEN'),
+
 ];
