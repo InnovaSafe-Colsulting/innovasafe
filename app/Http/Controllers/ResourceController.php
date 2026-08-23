@@ -74,7 +74,7 @@ class ResourceController extends Controller
                 $blogTypeId = DB::table('resources_types')->where('resource', 'Blog')->value('id');
                 $imagePath = null;
                 if ($request->hasFile('image')) {
-                    $imagePath = $request->file('image')->store('blog-images', 'public');
+                    $imagePath = $request->file('image')->store('blog-images', 'public_html');
                 }
                 DB::table('blog_resource_details')->insert([
                     'title'            => $validated['title'],
@@ -89,7 +89,7 @@ class ResourceController extends Controller
             } else {
                 $filePath = null;
                 if ($request->hasFile('path')) {
-                    $filePath = $request->file('path')->store('documents', 'public');
+                    $filePath = $request->file('path')->store('documents', 'public_html');
                 }
                 DB::table('documents_resources_details')->insert([
                     'title'            => $validated['title'],
@@ -139,8 +139,8 @@ class ResourceController extends Controller
                 ];
                 if ($request->hasFile('image')) {
                     $old = DB::table('blog_resource_details')->where('id', $id)->first();
-                    if ($old && $old->image) Storage::disk('public')->delete($old->image);
-                    $updateData['image'] = $request->file('image')->store('blog-images', 'public');
+                    if ($old && $old->image) Storage::disk('public_html')->delete($old->image);
+                    $updateData['image'] = $request->file('image')->store('blog-images', 'public_html');
                 }
                 DB::table('blog_resource_details')->where('id', $id)->update($updateData);
             } else {
@@ -152,8 +152,8 @@ class ResourceController extends Controller
                 ];
                 if ($request->hasFile('path')) {
                     $old = DB::table('documents_resources_details')->where('id', $id)->first();
-                    if ($old && $old->path) Storage::disk('public')->delete($old->path);
-                    $updateData['path'] = $request->file('path')->store('documents', 'public');
+                    if ($old && $old->path) Storage::disk('public_html')->delete($old->path);
+                    $updateData['path'] = $request->file('path')->store('documents', 'public_html');
                 }
                 DB::table('documents_resources_details')->where('id', $id)->update($updateData);
             }
@@ -181,11 +181,11 @@ class ResourceController extends Controller
         try {
             if ($type == 'blog') {
                 $resource = DB::table('blog_resource_details')->where('id', $id)->first();
-                if ($resource && $resource->image) Storage::disk('public')->delete($resource->image);
+                if ($resource && $resource->image) Storage::disk('public_html')->delete($resource->image);
                 DB::table('blog_resource_details')->where('id', $id)->delete();
             } else {
                 $resource = DB::table('documents_resources_details')->where('id', $id)->first();
-                if ($resource && $resource->path) Storage::disk('public')->delete($resource->path);
+                if ($resource && $resource->path) Storage::disk('public_html')->delete($resource->path);
                 DB::table('documents_resources_details')->where('id', $id)->delete();
             }
             return response()->json(['success' => true, 'message' => 'Elemento borrado con éxito.']);
