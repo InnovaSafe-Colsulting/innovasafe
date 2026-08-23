@@ -99,8 +99,8 @@
     <div class="banner-slider relative">
         {{-- Slide 1 --}}
         <div class="banner-slide active">
-            <img src="{{ asset('images/banners/Banner_Web.jpeg') }}" alt="Banner" class="hidden md:block w-full">
-            <img src="{{ asset('images/banners/Banner_Movil.jpeg') }}" alt="Banner" class="block md:hidden w-full object-cover" style="height:220px;object-position:center">
+            <img src="{{ asset('images/banners/Banner_Web.jpeg') }}" alt="Banner" class="hidden md:block w-full" style="max-height:400px;object-fit:cover;object-position:center">
+            <img src="{{ asset('images/banners/Banner_Movil.jpeg') }}" alt="Banner" class="block md:hidden w-full" style="max-height:220px;object-fit:cover;object-position:center">
         </div>
     </div>
     {{-- Dots --}}
