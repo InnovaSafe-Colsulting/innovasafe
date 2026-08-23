@@ -94,6 +94,46 @@
     </div>
 </section>
 
+{{-- Banners Section --}}
+<section id="banners" class="relative overflow-hidden bg-black">
+    <div class="banner-slider relative">
+        {{-- Slide 1 --}}
+        <div class="banner-slide active">
+            <img src="{{ asset('images/banners/Banner_Web.jpeg') }}" alt="Banner" class="hidden md:block w-full">
+            <img src="{{ asset('images/banners/Banner_Movil.jpeg') }}" alt="Banner" class="block md:hidden w-full object-cover" style="height:220px;object-position:center">
+        </div>
+    </div>
+    {{-- Dots --}}
+    <div class="banner-dots absolute bottom-3 left-0 right-0 flex justify-center gap-2">
+        <button class="banner-dot active w-2.5 h-2.5 rounded-full bg-white opacity-80 transition-all" data-index="0"></button>
+    </div>
+</section>
+
+<style>
+.banner-slide { display:none; }
+.banner-slide.active { display:block; }
+.banner-dot { border:none; cursor:pointer; padding:0; }
+.banner-dot.active { opacity:1; transform:scale(1.3); }
+</style>
+
+<script>
+(function(){
+    const slides = document.querySelectorAll('.banner-slide');
+    const dots   = document.querySelectorAll('.banner-dot');
+    if(slides.length <= 1) return;
+    let current = 0;
+    function goTo(i){
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = i % slides.length;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+    }
+    dots.forEach((d,i) => d.addEventListener('click', () => goTo(i)));
+    setInterval(() => goTo(current + 1), 5000);
+})();
+</script>
+
 {{-- Soluciones Digitales Section --}}
 <section id="servicios" class="py-16 lg:py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
