@@ -95,18 +95,32 @@
 </section>
 
 {{-- Banners Section --}}
+@php
+    $bannersWeb   = DB::table('banners')->where('status', 1)->where('movil', '0')->orderBy('position')->orderBy('created_at')->get();
+    $bannersMovil = DB::table('banners')->where('status', 1)->where('movil', '1')->orderBy('position')->orderBy('created_at')->get();
+@endphp
+@if($bannersWeb->isNotEmpty() || $bannersMovil->isNotEmpty())
 <section id="banners" class="relative overflow-hidden bg-black">
     <div class="banner-slider relative">
-        {{-- Slide 1 --}}
-        <div class="banner-slide active">
-            <img src="{{ asset('images/banners/Banner_Web.png') }}" alt="Banner" class="hidden md:block w-full h-auto">
-            <img src="{{ asset('images/banners/Banner_Movil.jpeg') }}" alt="Banner" class="block md:hidden w-full" style="height:220px;object-fit:cover;object-position:center">
+        @foreach($bannersWeb as $i => $banner)
+        @php $movilBanner = $bannersMovil->get($i) ?? $bannersMovil->first(); @endphp
+        <div class="banner-slide {{ $i === 0 ? 'active' : '' }}">
+            <img src="{{ asset($banner->image) }}" alt="{{ $banner->name }}" class="hidden md:block w-full">
+            @if($movilBanner)
+                <img src="{{ asset($movilBanner->image) }}" alt="{{ $movilBanner->name }}" class="block md:hidden w-full" style="height:220px;object-fit:cover;object-position:center">
+            @else
+                <img src="{{ asset($banner->image) }}" alt="{{ $banner->name }}" class="block md:hidden w-full" style="height:220px;object-fit:cover;object-position:center">
+            @endif
         </div>
+        @endforeach
     </div>
-    {{-- Dots --}}
+    @if($bannersWeb->count() > 1)
     <div class="banner-dots absolute bottom-3 left-0 right-0 flex justify-center gap-2">
-        <button class="banner-dot active w-2.5 h-2.5 rounded-full bg-white opacity-80 transition-all" data-index="0"></button>
+        @foreach($bannersWeb as $i => $banner)
+        <button class="banner-dot {{ $i === 0 ? 'active' : '' }} w-2.5 h-2.5 rounded-full bg-white opacity-80 transition-all" data-index="{{ $i }}"></button>
+        @endforeach
     </div>
+    @endif
 </section>
 
 <style>
@@ -133,6 +147,7 @@
     setInterval(() => goTo(current + 1), 5000);
 })();
 </script>
+@endif
 
 {{-- Soluciones Digitales Section --}}
 <section id="servicios" class="py-16 lg:py-24 bg-white">
