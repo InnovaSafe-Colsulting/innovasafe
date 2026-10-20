@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contact;
+use App\Models\User;
+use App\Models\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
 class ServiceAccessController extends Controller
 {
     public function check(Request $request)
@@ -20,21 +21,17 @@ class ServiceAccessController extends Controller
             return response()->json(['access' => false, 'message' => 'Email requerido'], 422);
         }
 
-        $user = DB::table('users')->where('email', $email)->first();
+        $user = User::where('email', $email)->first();
         if (!$user || $user->active != 1) {
-            return response()->json(['access' => false]);
+            return response()->json(['access' => false, 'message' => 'El usuario esta inactivo']);
         }
 
-        $contact = DB::table('contacts')->where('email', $email)->first();
+        $contact = Contact::where('email', $email)->first();
         if (!$contact) {
-            return response()->json(['access' => false]);
+            return response()->json(['access' => false, 'message' => 'El usuario no es un contacto activo de la empresa']);
         }
 
-        $hasActive = DB::table('user_services')
-            ->where('contact_id', $contact->id)
-            ->where('status', 'active')
-            ->exists();
-
+        $hasActive = UserService::where('contact_id', $contact->id)->where('status', 'active')->exists();
         return response()->json(['access' => $hasActive]);
     }
 }
