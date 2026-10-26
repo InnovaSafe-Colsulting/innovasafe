@@ -46,6 +46,12 @@ class UserForm
                 ->required()
                 ->searchable()
                 ->preload(),
+            Select::make('tenant_id')
+                ->label('Empresa')
+                ->relationship('tenant', 'name')
+                ->searchable()
+                ->preload()
+                ->nullable(),
             Toggle::make('status')
                 ->label('Estado')
                 ->required(),

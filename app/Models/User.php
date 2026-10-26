@@ -23,6 +23,7 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'password',
         'role_id',
+        'tenant_id',
         'status',
         'active',
     ];
@@ -48,6 +49,11 @@ class User extends Authenticatable implements FilamentUser
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
     }
 
     public function getNameAttribute(): string

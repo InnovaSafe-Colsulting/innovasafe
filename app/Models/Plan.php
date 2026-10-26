@@ -2,26 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Plan extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'id',
         'name',
+        'slug',
         'description',
-        'access',
-        'prize',
-        'basic_modules',
-        'additional_modules',
-        'discount',
-        'status',
+        'price',
+        'currency',
+        'billing_period',
+        'is_active',
     ];
 
-    protected $casts = [
-        'status' => 'string',
-    ];
+    public function services()
+    {
+        return $this->belongsToMany(Service::class, 'plan_services');
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }

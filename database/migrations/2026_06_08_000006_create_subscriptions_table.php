@@ -10,15 +10,19 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->bigInteger('plan_id');
-            $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->integer('quantity')->nullable();
-            $table->double('total_prize', 10, 2)->nullable();
-            $table->enum('status_suscription', ['Active', 'Pending', 'Unsuscribe'])->default('Unsuscribe');
+            $table->string('reference')->unique();
+            $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
+            $table->foreignId('plan_id')->nullable()->constrained('plans')->nullOnDelete();
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
+            $table->date('grace_period_end')->nullable();
+            $table->enum('status', ['pending', 'active', 'suspended', 'expired', 'cancelled'])->default('pending');
+            $table->boolean('auto_renew')->default(false);
+            $table->decimal('subtotal', 15, 2)->default(0);
+            $table->decimal('discount', 15, 2)->default(0);
+            $table->decimal('tax', 15, 2)->default(0);
+            $table->decimal('total', 15, 2)->default(0);
             $table->timestamps();
-
-            $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
         });
     }
 

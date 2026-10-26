@@ -10,7 +10,7 @@ class PlanController extends Controller
 {
     public function index()
     {
-        $plans = Plan::where('status', '1')->get();
+        $plans = Plan::where('is_active', true)->get();
         
         // Obtener servicios
         $typeServices = DB::table('type_services')->get();
@@ -34,7 +34,7 @@ class PlanController extends Controller
     
     public function getPlansApi(Request $request)
     {
-        $query = Plan::where('status', '1');
+        $query = Plan::where('is_active', true);
         
         if ($request->has('search') && $request->search) {
             $search = $request->search;
@@ -44,7 +44,7 @@ class PlanController extends Controller
             });
         }
         
-        $plans = $query->get(['id', 'name', 'description', 'prize']);
+        $plans = $query->get(['id', 'name', 'description', 'price']);
         
         return response()->json($plans);
     }

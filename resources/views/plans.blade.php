@@ -72,7 +72,7 @@
                                     <label class="flex items-center justify-between p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition">
                                         <div class="flex items-center">
                                             <input type="checkbox" name="billing_mensual_{{ $plan->id }}" value="mensual"
-                                                data-price="{{ $plan->prize }}"
+                                                data-price="{{ $plan->price }}"
                                                 data-period="Mensual"
                                                 data-plan-id="{{ $plan->id }}"
                                                 class="billing-check w-4 h-4 text-[#2268bd] rounded focus:ring-[#2268bd]">
@@ -82,7 +82,7 @@
                                             </div>
                                         </div>
                                         <div class="text-right">
-                                            <p class="text-lg font-bold text-[#0a0f2c]">${{ number_format($plan->prize, 0, ',', '.') }}</p>
+                                            <p class="text-lg font-bold text-[#0a0f2c]">${{ number_format($plan->price, 0, ',', '.') }}</p>
                                             <p class="text-xs text-gray-500">COP</p>
                                         </div>
                                     </label>
@@ -98,7 +98,7 @@
                                             4 => 0.1935,
                                             5 => 0.1984,
                                         ];
-                                        $valorAnual = $plan->prize * 12;
+                                        $valorAnual = $plan->price * 12;
                                         $descuentoRate = $discountRates[$plan->id] ?? 0.20;
                                         $descuento = $valorAnual * $descuentoRate;
                                         $valorAnualConDescuento = $valorAnual - $descuento;
@@ -128,7 +128,7 @@
                                 </div>
                             </div>
                         </form>
-                    @elseif($plan->id == 6 && $plan->prize == 0)
+                    @elseif($plan->id == 6 && $plan->price == 0)
                         {{-- Plan Personalize con precio 0 - Mensaje personalizado --}}
                         <div class="text-center py-4">
                             <p class="text-lg font-semibold text-[#2268bd] mb-2">Precio Personalizado</p>
@@ -138,13 +138,13 @@
                         </div>
                     @else
                         {{-- Otros planes mantienen el formato original --}}
-                        <p class="text-3xl font-black text-[#0a0f2c]">${{ number_format($plan->prize, 0, ',', '.') }}</p>
+                        <p class="text-3xl font-black text-[#0a0f2c]">${{ number_format($plan->price, 0, ',', '.') }}</p>
                         <p class="text-sm font-semibold text-gray-500">COP</p>
                         <p class="text-xs text-gray-400">IVA incluido</p>
                     @endif
                 </div>
                 <div class="mt-6">
-                    @if($plan->id == 6 && $plan->prize == 0)
+                    @if($plan->id == 6 && $plan->price == 0)
                         <button
                             onclick="openAdquirirModal({{ $plan->id }}, '{{ addslashes($plan->name) }}', 'Personalizado', 0)"
                             class="btn w-full text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2"

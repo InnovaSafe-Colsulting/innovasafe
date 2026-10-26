@@ -126,11 +126,10 @@ table.pl-table td.pl-name { color:#f1f5f9; font-weight:500; }
                     <th>#</th>
                     <th>Nombre</th>
                     <th>Descripción</th>
-                    <th>Accesos</th>
                     <th>Precio</th>
-                    <th>Mód. Básicos</th>
-                    <th>Mód. Complementarios</th>
-                    <th>Descuento</th>
+                    <th>Moneda</th>
+                    <th>Período</th>
+                    <th>Servicios</th>
                     <th>Estado</th>
                     <th>Opciones</th>
                 </tr>
@@ -141,14 +140,19 @@ table.pl-table td.pl-name { color:#f1f5f9; font-weight:500; }
                     <td style="color:#475569;">{{ $p->id }}</td>
                     <td class="pl-name">{{ $p->name }}</td>
                     <td style="max-width:220px;font-size:.78rem;color:#94a3b8;">{{ $p->description ?: '-' }}</td>
-                    <td style="text-align:center;">{{ $p->access ?? '-' }}</td>
-                    <td style="white-space:nowrap;">${{ number_format($p->prize, 0, ',', '.') }}</td>
-                    <td><span class="badge {{ $p->basic_modules == '1' ? 'badge-green' : 'badge-red' }}">{{ $p->basic_modules == '1' ? 'Sí' : 'No' }}</span></td>
-                    <td><span class="badge {{ $p->additional_modules == '1' ? 'badge-green' : 'badge-red' }}">{{ $p->additional_modules == '1' ? 'Sí' : 'No' }}</span></td>
-                    <td>{{ $p->discount ? $p->discount.'%' : '-' }}</td>
+                    <td style="white-space:nowrap;">${{ number_format($p->price, 0, ',', '.') }}</td>
+                    <td>{{ $p->currency }}</td>
+                    <td>{{ ucfirst($p->billing_period) }}</td>
+                    <td style="font-size:.75rem;color:#94a3b8;">
+                        @if(!empty($p->services))
+                            {{ implode(', ', $p->services) }}
+                        @else
+                            <span style="color:#475569;">—</span>
+                        @endif
+                    </td>
                     <td>
-                        <span class="badge {{ $p->status == '1' ? 'badge-green' : 'badge-red' }}">
-                            {{ $p->status == '1' ? 'Activo' : 'Inactivo' }}
+                        <span class="badge {{ $p->is_active ? 'badge-green' : 'badge-red' }}">
+                            {{ $p->is_active ? 'Activo' : 'Inactivo' }}
                         </span>
                     </td>
                     <td>
@@ -172,13 +176,16 @@ table.pl-table td.pl-name { color:#f1f5f9; font-weight:500; }
         @foreach($plans as $p)
         <div class="pl-mobile-card">
             <div class="mc-name">{{ $p->name }}</div>
-            <div class="mc-row"><span class="mc-label">Precio</span><span>${{ number_format($p->prize, 0, ',', '.') }}</span></div>
-            <div class="mc-row"><span class="mc-label">Accesos</span><span>{{ $p->access ?? '-' }}</span></div>
-            <div class="mc-row"><span class="mc-label">Descuento</span><span>{{ $p->discount ? $p->discount.'%' : '-' }}</span></div>
+            <div class="mc-row"><span class="mc-label">Precio</span><span>${{ number_format($p->price, 0, ',', '.') }}</span></div>
+            <div class="mc-row"><span class="mc-label">Período</span><span>{{ ucfirst($p->billing_period) }}</span></div>
+            <div class="mc-row">
+                <span class="mc-label">Servicios</span>
+                <span style="font-size:.75rem;">{{ !empty($p->services) ? implode(', ', $p->services) : '—' }}</span>
+            </div>
             <div class="mc-row">
                 <span class="mc-label">Estado</span>
-                <span class="badge {{ $p->status == '1' ? 'badge-green' : 'badge-red' }}">
-                    {{ $p->status == '1' ? 'Activo' : 'Inactivo' }}
+                <span class="badge {{ $p->is_active ? 'badge-green' : 'badge-red' }}">
+                    {{ $p->is_active ? 'Activo' : 'Inactivo' }}
                 </span>
             </div>
             <div class="mc-actions">
@@ -218,41 +225,52 @@ table.pl-table td.pl-name { color:#f1f5f9; font-weight:500; }
                     <textarea wire:model="description" placeholder="Descripción del plan..."></textarea>
                 </div>
                 <div class="pl-form-group">
+                    <label>Slug</label>
+                    <input type="text" wire:model="planSlug" placeholder="Auto-generado del nombre">
+                </div>
+                <div class="pl-form-group">
                     <label>Precio <span style="color:#f87171">*</span></label>
-                    <input type="number" wire:model="prize" placeholder="Ej: 197900">
-                    @if(isset($formErrors['prize']))<div class="err">{{ $formErrors['prize'] }}</div>@endif
+                    <input type="number" wire:model="price" placeholder="Ej: 197900">
+                    @if(isset($formErrors['price']))<div class="err">{{ $formErrors['price'] }}</div>@endif
                 </div>
                 <div class="pl-form-group">
-                    <label>Accesos</label>
-                    <input type="number" wire:model="access" placeholder="Ej: 2">
-                    @if(isset($formErrors['access']))<div class="err">{{ $formErrors['access'] }}</div>@endif
+                    <label>Moneda</label>
+                    <select wire:model="currency">
+                        <option value="COP">COP</option>
+                        <option value="USD">USD</option>
+                    </select>
                 </div>
                 <div class="pl-form-group">
-                    <label>Descuento (%)</label>
-                    <input type="number" wire:model="discount" placeholder="Ej: 10">
-                    @if(isset($formErrors['discount']))<div class="err">{{ $formErrors['discount'] }}</div>@endif
+                    <label>Período de facturación</label>
+                    <select wire:model="billing_period">
+                        <option value="monthly">Mensual</option>
+                        <option value="quarterly">Trimestral</option>
+                        <option value="semiannual">Semestral</option>
+                        <option value="annual">Anual</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
                 </div>
                 <div class="pl-form-group">
                     <label>Estado</label>
-                    <select wire:model="status">
+                    <select wire:model="is_active">
                         <option value="1">Activo</option>
                         <option value="0">Inactivo</option>
                     </select>
                 </div>
-                <div class="pl-form-group">
-                    <label>Módulos básicos</label>
-                    <select wire:model="basic_modules">
-                        <option value="1">Sí</option>
-                        <option value="0">No</option>
-                    </select>
+                @if(count($services) > 0)
+                <div class="pl-form-group full">
+                    <label>Servicios incluidos</label>
+                    <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.25rem;">
+                        @foreach($services as $svc)
+                        <label style="display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#cbd5e1;font-weight:400;cursor:pointer;">
+                            <input type="checkbox" wire:model="selectedServices" value="{{ $svc->id }}"
+                                style="width:1rem;height:1rem;accent-color:#3b82f6;cursor:pointer;">
+                            {{ $svc->name }}
+                        </label>
+                        @endforeach
+                    </div>
                 </div>
-                <div class="pl-form-group">
-                    <label>Módulos adicionales</label>
-                    <select wire:model="additional_modules">
-                        <option value="1">Sí</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
+                @endif
             </div>
         </div>
         <div class="pl-modal-footer">

@@ -3,31 +3,53 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Subscription extends Model
 {
     protected $fillable = [
-        'user_id',
+        'reference',
+        'tenant_id',
         'plan_id',
-        'order_id',
-        'quantity',
-        'total_prize',
-        'status_suscription',
+        'start_date',
+        'end_date',
+        'grace_period_end',
+        'status',
+        'auto_renew',
+        'subtotal',
+        'discount',
+        'tax',
+        'total',
     ];
 
-    public function user(): BelongsTo
+    protected $casts = [
+        'start_date'       => 'date',
+        'end_date'         => 'date',
+        'grace_period_end' => 'date',
+        'auto_renew'       => 'boolean',
+    ];
+
+    public function tenant()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Tenant::class);
     }
 
-    public function plan(): BelongsTo
+    public function plan()
     {
         return $this->belongsTo(Plan::class);
     }
 
-    public function order(): BelongsTo
+    public function services()
     {
-        return $this->belongsTo(Order::class);
+        return $this->hasMany(SubscriptionService::class);
+    }
+
+    public function paymentAllocations()
+    {
+        return $this->hasMany(PaymentAllocation::class);
+    }
+
+    public function histories()
+    {
+        return $this->hasMany(SubscriptionHistory::class);
     }
 }

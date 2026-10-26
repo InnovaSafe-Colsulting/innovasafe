@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Filament\Resources\Tenants\Pages;
+
+use App\Filament\Resources\Tenants\TenantResource;
+use Filament\Actions\DeleteAction;
+use Filament\Resources\Pages\EditRecord;
+
+class EditTenant extends EditRecord
+{
+    protected static string $resource = TenantResource::class;
+
+    public function getTitle(): string
+    {
+        return 'Editar Empresa';
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            DeleteAction::make()->label('Borrar'),
+        ];
+    }
+}

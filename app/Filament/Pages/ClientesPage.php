@@ -20,4 +20,9 @@ class ClientesPage extends Page
     protected static string|UnitEnum|null $navigationGroup = 'Gestión';
 
     protected static ?int $navigationSort = 1;
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 }

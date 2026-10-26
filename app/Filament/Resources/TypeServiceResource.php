@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TypeServiceResource\Pages;
 use App\Filament\Resources\TypeServiceResource\Schemas\TypeServiceForm;
-use App\Models\TypeService;
+use App\Models\Service;
 use BackedEnum;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
@@ -20,7 +20,7 @@ use UnitEnum;
 
 class TypeServiceResource extends Resource
 {
-    protected static ?string $model = TypeService::class;
+    protected static ?string $model = Service::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
@@ -51,7 +51,7 @@ class TypeServiceResource extends Resource
                     ->label('Descripción')
                     ->limit(50)
                     ->searchable(),
-                ToggleColumn::make('status')
+                ToggleColumn::make('is_active')
                     ->label('Estado')
                     ->sortable(),
                 TextColumn::make('created_at')
@@ -70,7 +70,7 @@ class TypeServiceResource extends Resource
                     ->icon('heroicon-o-eye')
                     ->color('info')
                     ->modalHeading(fn ($record) => "Detalles de {$record->name}")
-                    ->modalContent(fn ($record) => view('filament.pages.service-details-modal', ['service' => \App\Models\TypeService::find($record->id)]))
+                    ->modalContent(fn ($record) => view('filament.pages.service-details-modal', ['service' => \App\Models\Service::find($record->id)]))
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Cerrar'),
                 EditAction::make()->label('Editar'),

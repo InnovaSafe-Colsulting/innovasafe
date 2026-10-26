@@ -249,10 +249,10 @@ function displaySearchResults(products) {
             <h3 class="font-semibold text-gray-900 mb-2">${product.name}</h3>
             <p class="text-sm text-gray-600 mb-3">${product.description || ''}</p>
             <div class="flex items-center justify-between mb-3">
-                <span class="text-lg font-bold text-[#2268bd]">$${product.prize.toLocaleString()}</span>
+                <span class="text-lg font-bold text-[#2268bd]">$${product.price.toLocaleString()}</span>
                 <span class="text-xs text-gray-500">Mensual</span>
             </div>
-            <button onclick="addProductToCheckout(${product.id}, '${product.name}', ${product.prize})" 
+            <button onclick="addProductToCheckout(${product.id}, '${product.name}', ${product.price})" 
                     class="w-full bg-[#2268bd] hover:bg-[#1a4c8c] text-white py-2 px-4 rounded-lg text-sm transition-colors">
                 Agregar al Carrito
             </button>
