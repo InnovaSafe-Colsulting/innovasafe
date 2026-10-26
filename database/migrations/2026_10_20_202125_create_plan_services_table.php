@@ -10,10 +10,27 @@ return new class extends Migration
     {
         Schema::create('plan_services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('plan_id')->constrained('plans')->cascadeOnDelete();
-            $table->foreignId('service_id')->constrained('services')->cascadeOnDelete();
+
+            $table->bigInteger('plan_id');
+
+            $table->foreignId('service_id');
+
             $table->timestamps();
-            $table->unique(['plan_id', 'service_id']);
+
+            $table->foreign('plan_id')
+                ->references('id')
+                ->on('plans')
+                ->cascadeOnDelete();
+
+            $table->foreign('service_id')
+                ->references('id')
+                ->on('services')
+                ->cascadeOnDelete();
+
+            $table->unique([
+                'plan_id',
+                'service_id',
+            ]);
         });
     }
 
