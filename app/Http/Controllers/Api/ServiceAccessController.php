@@ -71,12 +71,15 @@ class ServiceAccessController extends Controller
             ]);
 
         return response()->json([
-            'success' => true,
-            'message' => $action === 'activate' ? 'Servicios activados correctamente' : 'Servicios desactivados correctamente',
-            'tenant'  => $tenant->name,
-            'user'    => $user->names . ' ' . $user->last_names,
-            'services'=> $serviceIds,
-            'action'  => $action,
+            'success'    => true,
+            'message'    => $action === 'activate' ? 'Servicios activados correctamente' : 'Servicios desactivados correctamente',
+            'tenant'     => $tenant->name,
+            'tenant_id'  => $user->tenant_id,
+            'name'       => $user->names,
+            'last_name'  => $user->last_names,
+            'email'      => $user->email,
+            'services'   => $serviceIds,
+            'action'     => $action,
         ]);
     }
 }
