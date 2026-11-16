@@ -70,16 +70,18 @@ class ServiceAccessController extends Controller
                 'updated_at'         => $now,
             ]);
 
+        $affected = DB::table('services')->whereIn('id', $serviceIds)->select('id', 'name', 'slug')->get();
+
         return response()->json([
-            'success'    => true,
-            'message'    => $action === 'activate' ? 'Servicios activados correctamente' : 'Servicios desactivados correctamente',
-            'tenant'     => $tenant->name,
-            'tenant_id'  => $user->tenant_id,
-            'name'       => $user->names,
-            'last_name'  => $user->last_names,
-            'email'      => $user->email,
-            'services'   => $serviceIds,
-            'action'     => $action,
+            'success'   => true,
+            'message'   => $action === 'activate' ? 'Servicios activados correctamente' : 'Servicios desactivados correctamente',
+            'tenant'    => $tenant->name,
+            'tenant_id' => $user->tenant_id,
+            'name'      => $user->names,
+            'last_name' => $user->last_names,
+            'email'     => $user->email,
+            'services'  => $affected,
+            'action'    => $action,
         ]);
     }
 }
