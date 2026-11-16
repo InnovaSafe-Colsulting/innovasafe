@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogResourceDetailController;
@@ -80,6 +81,8 @@ Route::middleware(['auth', 'client.only'])->group(function () {
 // Rutas para administradores
 Route::middleware(['auth', 'admin.only'])->prefix('admin')->name('admin.')->group(function () {
     Route::post('/type-services-detail', [TypeServiceDetailController::class, 'store'])->name('type-services-detail.store');
+    Route::post('/banners', [BannerController::class, 'store'])->name('banners.store');
+    Route::post('/banners/{id}', [BannerController::class, 'update'])->name('banners.update');
     Route::post('/upload-payment-proof', function (\Illuminate\Http\Request $request) {
         if (!$request->hasFile('payment_proof')) return response()->json(['path' => null]);
         $file = $request->file('payment_proof');

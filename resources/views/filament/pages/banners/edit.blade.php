@@ -35,18 +35,28 @@
             <h2>Editar Banner</h2>
         </div>
 
+        <form action="{{ route('admin.banners.update', $bannerId) }}" method="POST" enctype="multipart/form-data">
+        @csrf
         <div class="bform-body">
             <div class="bform-group">
                 <label class="bform-label">Nombre <span>*</span></label>
-                <input type="text" wire:model="name" class="bform-input {{ $errors->has('name') ? 'error' : '' }}">
+                <input type="text" name="name" value="{{ old('name', $name) }}" class="bform-input {{ $errors->has('name') ? 'error' : '' }}">
                 @error('name')<p class="bform-err">{{ $message }}</p>@enderror
             </div>
 
             <div class="bform-group">
                 <label class="bform-label">Posición <span>*</span></label>
-                <input type="number" wire:model="position" min="0" class="bform-input {{ $errors->has('position') ? 'error' : '' }}">
+                <input type="number" name="position" value="{{ old('position', $position) }}" min="0" class="bform-input {{ $errors->has('position') ? 'error' : '' }}">
                 <p class="bform-hint">Orden de aparición (0 = primero)</p>
                 @error('position')<p class="bform-err">{{ $message }}</p>@enderror
+            </div>
+
+            <div class="bform-group">
+                <label class="bform-label">Tipo <span>*</span></label>
+                <select name="movil" class="bform-select">
+                    <option value="0" {{ $movil == 0 ? 'selected' : '' }}>Escritorio</option>
+                    <option value="1" {{ $movil == 1 ? 'selected' : '' }}>Móvil</option>
+                </select>
             </div>
 
             <div class="bform-group">
@@ -58,16 +68,16 @@
 
             <div class="bform-group">
                 <label class="bform-label">Nueva imagen <span style="color:#475569;font-style:normal;">(opcional)</span></label>
-                <input type="file" wire:model="image" accept="image/jpeg,image/png,image/webp" class="bform-file {{ $errors->has('image') ? 'error' : '' }}">
-                <p class="bform-hint">JPEG, PNG, WEBP — máx. 2MB. Dejar vacío para mantener la actual.</p>
+                <input type="file" name="image" accept="image/jpeg,image/png,image/webp" class="bform-file {{ $errors->has('image') ? 'error' : '' }}">
+                <p class="bform-hint">JPEG, PNG, WEBP — máx. 5MB. Dejar vacío para mantener la actual.</p>
                 @error('image')<p class="bform-err">{{ $message }}</p>@enderror
             </div>
 
             <div class="bform-group">
                 <label class="bform-label">Status <span>*</span></label>
-                <select wire:model="status" class="bform-select {{ $errors->has('status') ? 'error' : '' }}">
-                    <option value="1">Activo</option>
-                    <option value="0">Inactivo</option>
+                <select name="status" class="bform-select">
+                    <option value="1" {{ $status == 1 ? 'selected' : '' }}>Activo</option>
+                    <option value="0" {{ $status == 0 ? 'selected' : '' }}>Inactivo</option>
                 </select>
                 @error('status')<p class="bform-err">{{ $message }}</p>@enderror
             </div>
@@ -75,11 +85,9 @@
 
         <div class="bform-footer">
             <a href="{{ route('filament.admin.pages.banners-page') }}" class="bform-btn-cancel">Cancelar</a>
-            <button wire:click="save" wire:loading.attr="disabled" class="bform-btn-submit">
-                <span wire:loading.remove wire:target="save">Guardar</span>
-                <span wire:loading wire:target="save">Guardando...</span>
-            </button>
+            <button type="submit" class="bform-btn-submit">Guardar</button>
         </div>
+        </form>
     </div>
 </div>
 </x-filament-panels::page>

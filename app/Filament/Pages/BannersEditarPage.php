@@ -24,6 +24,7 @@ class BannersEditarPage extends Page
     public int $bannerId;
     public string $name = '';
     public int $position = 0;
+    public int $movil = 0;
     public $image = null;
     public string $currentImage = '';
     public int $status = 1;
@@ -34,6 +35,7 @@ class BannersEditarPage extends Page
         $this->bannerId     = $banner->id;
         $this->name         = $banner->name;
         $this->position     = $banner->position;
+        $this->movil        = $banner->movil ?? 0;
         $this->currentImage = $banner->image;
         $this->status       = $banner->status;
     }
