@@ -44,7 +44,9 @@ class BannersCrearPage extends Page
         ]);
 
         $filename = uniqid() . '.' . $this->image->getClientOriginalExtension();
-        $this->image->move(public_path('images/banners'), $filename);
+        $destPath = env('PUBLIC_IMAGES_PATH', public_path('images/banners'));
+        if (!file_exists($destPath)) mkdir($destPath, 0755, true);
+        $this->image->move($destPath, $filename);
 
         DB::table('banners')->insert([
             'name'       => $this->name,

@@ -62,9 +62,11 @@ class BannersEditarPage extends Page
         ];
 
         if ($this->image) {
-            if ($this->currentImage) @unlink(public_path($this->currentImage));
+            $destPath = env('PUBLIC_IMAGES_PATH', public_path('images/banners'));
+            if (!file_exists($destPath)) mkdir($destPath, 0755, true);
+            if ($this->currentImage) @unlink(rtrim($destPath, '/') . '/' . basename($this->currentImage));
             $filename = uniqid() . '.' . $this->image->getClientOriginalExtension();
-            $this->image->move(public_path('images/banners'), $filename);
+            $this->image->move($destPath, $filename);
             $data['image'] = 'images/banners/' . $filename;
         }
 

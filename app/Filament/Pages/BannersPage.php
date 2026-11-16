@@ -63,7 +63,8 @@ class BannersPage extends Page
     {
         $banner = DB::table('banners')->where('id', $this->deleteId)->first();
         if ($banner && $banner->image) {
-            @unlink(public_path($banner->image));
+            $destPath = env('PUBLIC_IMAGES_PATH', public_path('images/banners'));
+            @unlink(rtrim($destPath, '/') . '/' . basename($banner->image));
         }
         DB::table('banners')->where('id', $this->deleteId)->delete();
         $this->closeDeleteModal();
